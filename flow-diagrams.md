@@ -4,7 +4,7 @@
 
 ```mermaid
 flowchart TB
-    Start([Input: "I love this product!"]) --> Extract[Feature Extraction]
+    Start(["I love this product!"]) --> Extract[Feature Extraction]
     
     Extract --> F1[Feature 1: Avg Sentiment<br/>Score: 0.8]
     Extract --> F2[Feature 2: Max Positive<br/>Score: 1.0]
@@ -36,7 +36,7 @@ flowchart TB
     O2 --> Decision
     O3 --> Decision
     
-    Decision --> Result([Result: "Positive"])
+    Decision --> Result(["Positive"])
     
     style Start fill:#e1f5ff
     style Result fill:#90EE90
