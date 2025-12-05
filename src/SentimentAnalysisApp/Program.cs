@@ -21,7 +21,10 @@ namespace SentimentAnalysisApp
                 "Absolutely brilliant, best purchase ever!",
                 "Disappointing and frustrating experience",
                 "Pretty good overall",
-                "Worst thing I've ever bought"
+                "Worst thing I've ever bought",
+                "Horrible service, will not be returning to this resturant again",
+                "I'm not so sure on this service",
+                "I'm not so sure on this service, sometimes it's good, sometime's it's poor, but on the whole it's good."
             };
 
             Console.WriteLine("Sentiment Analysis Neural Network\n");
