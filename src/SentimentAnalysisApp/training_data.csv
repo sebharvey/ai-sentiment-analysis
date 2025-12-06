@@ -1,0 +1,308 @@
+# Sentiment Training Data
+# Format: sentiment,sentence
+# Sentiments: positive, negative, neutral
+
+# POSITIVE EXAMPLES
+positive,I love this product it is amazing
+positive,Great quality excellent purchase
+positive,Wonderful experience very happy with it
+positive,Fantastic brilliant and beautiful
+positive,Best thing ever so good
+positive,Outstanding superb quality
+positive,Perfect exactly what I wanted
+positive,Incredible this is awesome
+positive,Love it highly recommend
+positive,Excellent very pleased
+positive,Amazing product great value
+positive,Brilliant purchase very satisfied
+positive,This exceeded all my expectations
+positive,Absolutely delightful couldn't be happier
+positive,Remarkable quality and design
+positive,Superb craftsmanship truly impressive
+positive,Exceptional value for money
+positive,Stunning results beyond belief
+positive,Magnificent work well done
+positive,Phenomenal experience five stars
+positive,Marvellous purchase so glad I bought it
+positive,Splendid quality exceptional service
+positive,Terrific product works perfectly
+positive,Beautiful design gorgeous appearance
+positive,Delighted with this purchase
+positive,First class quality top notch
+positive,Gorgeous simply stunning
+positive,Impressive very well made
+positive,Joy to use every day
+positive,Lovely product arrived quickly
+positive,Perfect fit exactly right
+positive,Radiant quality shines through
+positive,Superior to competitors highly recommend
+positive,Top quality best in class
+positive,Unbeatable value incredible price
+positive,Very happy with this choice
+positive,Wonderful service fast delivery
+positive,Excellent customer support helpful staff
+positive,Great investment worth every penny
+positive,High quality durable construction
+positive,Impressed by the attention to detail
+positive,Just what I needed thank you
+positive,Keeps getting better with use
+positive,Love everything about this
+positive,Met all my requirements perfectly
+positive,Nice surprise better than expected
+positive,Outstanding performance reliable
+positive,Pleased with my decision
+positive,Quality speaks for itself
+positive,Really happy highly satisfied
+positive,Solid construction well built
+positive,This is a game changer
+positive,Unique and innovative design
+positive,Very impressed with quality
+positive,Works like a charm
+positive,Extremely satisfied with purchase
+positive,Fabulous addition to my collection
+positive,Glad I chose this option
+positive,Highly effective does the job
+positive,Ideal for my needs
+positive,Just brilliant absolutely love it
+positive,Keeps me coming back
+positive,Lovely quality beautiful finish
+positive,Makes life so much easier
+positive,Nice touch great features
+positive,Outperforms the competition
+positive,Premium quality worth it
+positive,Quick delivery excellent packaging
+positive,Reliable and dependable
+positive,Stylish and functional
+positive,Thoroughly enjoyed using this
+positive,Ultimate solution for my problem
+positive,Value for money is excellent
+positive,Well designed user friendly
+positive,Exactly as described very happy
+positive,Flawless execution perfect
+positive,Great addition to my home
+positive,Highly recommend to everyone
+positive,Impressive results immediate improvement
+positive,Just perfect no complaints
+positive,Kind staff helpful service
+positive,Lovely surprise exceeded hopes
+positive,Made my day so happy
+positive,Nicely packaged arrived safely
+positive,Outstanding value best deal
+positive,Pleased with every aspect
+positive,Quality exceeds expectations
+positive,Really appreciate the craftsmanship
+positive,Satisfied beyond measure
+positive,The best I've ever used
+positive,Undeniably good purchase
+positive,Very well thought out
+positive,Works wonders highly effective
+positive,Exceptional in every way
+positive,Fabulous quality and style
+positive,Great features easy to use
+positive,Happy customer will buy again
+positive,Ideal choice no regrets
+positive,Joyful experience from start to finish
+positive,Keeps delivering excellent results
+positive,Loving this more each day
+positive,Magnificent addition truly special
+positive,Neat design compact and efficient
+
+# NEGATIVE EXAMPLES
+negative,I hate this terrible product
+negative,Awful experience very bad
+negative,Horrible and disappointing worst ever
+negative,Frustrating and useless waste of money
+negative,Poor quality hate it
+negative,Terrible do not buy
+negative,Worst purchase disappointing
+negative,Bad quality very unhappy
+negative,Dreadful horrible experience
+negative,Awful waste of time
+negative,Disappointing poor quality
+negative,Hate it complete waste
+negative,Absolutely terrible avoid this
+negative,Broken after one use
+negative,Cheap materials fell apart
+negative,Defective arrived damaged
+negative,Extremely poor construction
+negative,Failed within days
+negative,Garbage total rubbish
+negative,Horrible customer service rude
+negative,Inferior quality substandard
+negative,Junk wouldn't recommend
+negative,Lacking in every aspect
+negative,Miserable experience regret buying
+negative,Not worth the money
+negative,Overpriced and underwhelming
+negative,Pathetic waste of money
+negative,Questionable quality very poor
+negative,Regret this purchase
+negative,Shoddy workmanship terrible
+negative,Total disappointment
+negative,Unreliable broke quickly
+negative,Very poor quality
+negative,Worthless don't waste your money
+negative,Extremely disappointing expected better
+negative,Faulty product doesn't work
+negative,Gross waste of money
+negative,Hated everything about it
+negative,Irritating and frustrating
+negative,Just awful terrible experience
+negative,Keeps breaking useless
+negative,Lousy quality terrible service
+negative,Massive disappointment
+negative,Never again worst purchase
+negative,Outrageous price poor quality
+negative,Poorly made cheaply constructed
+negative,Quite terrible very bad
+negative,Ridiculous waste of money
+negative,Shocking quality appalling
+negative,Trash absolute rubbish
+negative,Unbearable to use
+negative,Vile product horrible
+negative,Worst thing I've bought
+negative,Extremely frustrating doesn't work
+negative,Failed expectations completely
+negative,Grotesque waste of money
+negative,Horrendous quality terrible
+negative,Inadequate for the price
+negative,Junky cheap materials
+negative,Kept breaking constantly
+negative,Loathe this purchase
+negative,Monumentally disappointing
+negative,Not as advertised misleading
+negative,Offensive to charge this price
+negative,Poorly designed doesn't function
+negative,Quite possibly the worst
+negative,Rubbish total waste
+negative,Subpar quality very poor
+negative,Thoroughly disappointed
+negative,Unacceptable quality terrible
+negative,Very poor value for money
+negative,Wouldn't recommend to anyone
+negative,Extremely low quality
+negative,Fell short of expectations
+negative,Grim experience very bad
+negative,Hideous waste of money
+negative,Inferior in every way
+negative,Just terrible avoid at all costs
+negative,Knew I should have avoided
+negative,Lamentable quality poor service
+negative,Mediocre at best mostly terrible
+negative,Not happy at all
+negative,Obviously cheaply made
+negative,Poorly executed disaster
+negative,Questionable ethics poor product
+negative,Regrettable purchase mistake
+negative,So disappointed very upset
+negative,Terrible experience never again
+negative,Utterly useless waste
+negative,Very dissatisfied unhappy
+negative,Waste of hard earned money
+negative,Execrable quality awful
+negative,Frightful experience terrible
+negative,Ghastly product avoid
+negative,Hopeless waste of time
+negative,Insufferable to use
+negative,Jarring poor quality
+negative,Killing me how bad this is
+
+# NEUTRAL EXAMPLES
+neutral,It is okay nothing special
+neutral,Average product acceptable quality
+neutral,Fine I suppose nothing great
+neutral,Okay quality average experience
+neutral,Acceptable but not amazing
+neutral,Mediocre nothing to complain about
+neutral,Standard product as expected
+neutral,Adequate serves its purpose
+neutral,Fair quality reasonable price
+neutral,It's alright does the job
+neutral,Neither good nor bad
+neutral,Ordinary nothing exceptional
+neutral,Passable meets basic needs
+neutral,Reasonable quality moderate price
+neutral,Satisfactory not outstanding
+neutral,Tolerable gets the work done
+neutral,Unexceptional but functional
+neutral,So so neither here nor there
+neutral,Middle of the road average
+neutral,Decent enough for the price
+neutral,Moderate quality acceptable
+neutral,Not terrible not great
+neutral,Okay for what it is
+neutral,Regular product standard quality
+neutral,Run of the mill ordinary
+neutral,Somewhat average nothing special
+neutral,Typical product as described
+neutral,Usual quality nothing more
+neutral,Borderline acceptable just okay
+neutral,Common quality standard features
+neutral,Expected quality nothing surprising
+neutral,Fairly average meets expectations
+neutral,Generally okay no complaints
+neutral,Half decent could be better
+neutral,In between not sure how I feel
+neutral,Just average nothing stands out
+neutral,Kind of okay not impressed
+neutral,Mostly fine some issues
+neutral,Neutral feelings about this
+neutral,Ordinary quality normal price
+neutral,Pretty standard typical product
+neutral,Quite average unremarkable
+neutral,Rather ordinary nothing special
+neutral,Somewhat satisfactory adequate
+neutral,This is just okay
+neutral,Undistinguished average product
+neutral,Vanilla product plain quality
+neutral,What you'd expect typical
+neutral,Moderately acceptable fair
+neutral,Not particularly good or bad
+neutral,Okay I guess does its job
+neutral,Reasonably standard average
+neutral,Serviceable but unremarkable
+neutral,Typical experience nothing new
+neutral,Unimpressive but functional
+neutral,Vague feelings neither way
+neutral,Works but nothing special
+neutral,Middle ground acceptable
+neutral,Not exceptional just average
+neutral,Okay product standard features
+neutral,Plain and simple average
+neutral,Quite ordinary typical
+neutral,Regular experience as expected
+neutral,Standard issue nothing more
+neutral,The usual average quality
+neutral,Unremarkable ordinary product
+neutral,Average at best nothing less
+neutral,Basic quality meets needs
+neutral,Common product standard
+neutral,Does what it should average
+neutral,Everyday quality typical
+neutral,Fair enough acceptable
+neutral,Generally average okay
+neutral,Halfway decent moderate
+neutral,It does the job okay
+neutral,Just normal nothing special
+neutral,Keeps to the average
+neutral,Like most products average
+neutral,Moderate in all aspects
+neutral,Normal quality typical price
+neutral,Ordinary in every way
+neutral,Pretty much average
+neutral,Quite typical unremarkable
+neutral,Regular and standard
+neutral,Somewhat ordinary acceptable
+neutral,Typical of this type
+neutral,Usual standards met
+neutral,Average functionality okay
+neutral,Basic and functional
+neutral,Common enough typical
+neutral,Does its job adequately
+neutral,Expected results average
+neutral,Fairly typical product
+neutral,Generally satisfactory
+neutral,Honest average quality
+neutral,It's just okay
+neutral,Just meets standards
+neutral,Kind of average

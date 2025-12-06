@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace TrueNeuralNetworkSentiment
@@ -213,52 +214,69 @@ namespace TrueNeuralNetworkSentiment
         }
 
         /// <summary>
+        /// Loads training data from a CSV file
+        /// Format: sentiment,sentence
+        /// Where sentiment is: positive, negative, or neutral
+        /// </summary>
+        private List<(string sentence, double[] label)> LoadTrainingData(string filePath)
+        {
+            var trainingData = new List<(string sentence, double[] label)>();
+
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException($"Training data file not found: {filePath}");
+            }
+
+            var lines = File.ReadAllLines(filePath);
+            int lineNumber = 0;
+
+            foreach (var line in lines)
+            {
+                lineNumber++;
+
+                // Skip empty lines or comments
+                if (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith("#"))
+                    continue;
+
+                var parts = line.Split(',', 2); // Split on first comma only
+                if (parts.Length != 2)
+                {
+                    Console.WriteLine($"Warning: Skipping malformed line {lineNumber}: {line}");
+                    continue;
+                }
+
+                var sentiment = parts[0].Trim().ToLower();
+                var sentence = parts[1].Trim();
+
+                double[] label = sentiment switch
+                {
+                    "positive" => new double[] { 1, 0, 0 },
+                    "negative" => new double[] { 0, 1, 0 },
+                    "neutral" => new double[] { 0, 0, 1 },
+                    _ => null
+                };
+
+                if (label == null)
+                {
+                    Console.WriteLine($"Warning: Unknown sentiment '{sentiment}' on line {lineNumber}, skipping");
+                    continue;
+                }
+
+                trainingData.Add((sentence, label));
+            }
+
+            Console.WriteLine($"Loaded {trainingData.Count} training examples from {filePath}\n");
+            return trainingData;
+        }
+
+        /// <summary>
         /// Trains the network on labelled sentiment data
         /// The network learns BOTH word embeddings AND classification weights
         /// </summary>
         public void Train()
         {
-            // Training data - in a real system, this would be thousands of examples
-            var trainingData = new List<(string sentence, double[] label)>
-            {
-                // Positive examples
-                ("I love this product it is amazing", new double[] { 1, 0, 0 }),
-                ("Great quality excellent purchase", new double[] { 1, 0, 0 }),
-                ("Wonderful experience very happy with it", new double[] { 1, 0, 0 }),
-                ("Fantastic brilliant and beautiful", new double[] { 1, 0, 0 }),
-                ("Best thing ever so good", new double[] { 1, 0, 0 }),
-                ("Outstanding superb quality", new double[] { 1, 0, 0 }),
-                ("Perfect exactly what I wanted", new double[] { 1, 0, 0 }),
-                ("Incredible this is awesome", new double[] { 1, 0, 0 }),
-                ("Love it highly recommend", new double[] { 1, 0, 0 }),
-                ("Excellent very pleased", new double[] { 1, 0, 0 }),
-                ("Amazing product great value", new double[] { 1, 0, 0 }),
-                ("Brilliant purchase very satisfied", new double[] { 1, 0, 0 }),
-
-                // Negative examples
-                ("I hate this terrible product", new double[] { 0, 1, 0 }),
-                ("Awful experience very bad", new double[] { 0, 1, 0 }),
-                ("Horrible and disappointing worst ever", new double[] { 0, 1, 0 }),
-                ("Frustrating and useless waste of money", new double[] { 0, 1, 0 }),
-                ("Poor quality hate it", new double[] { 0, 1, 0 }),
-                ("Terrible do not buy", new double[] { 0, 1, 0 }),
-                ("Worst purchase disappointing", new double[] { 0, 1, 0 }),
-                ("Bad quality very unhappy", new double[] { 0, 1, 0 }),
-                ("Dreadful horrible experience", new double[] { 0, 1, 0 }),
-                ("Awful waste of time", new double[] { 0, 1, 0 }),
-                ("Disappointing poor quality", new double[] { 0, 1, 0 }),
-                ("Hate it complete waste", new double[] { 0, 1, 0 }),
-
-                // Neutral examples
-                ("It is okay nothing special", new double[] { 0, 0, 1 }),
-                ("Average product acceptable quality", new double[] { 0, 0, 1 }),
-                ("Fine I suppose nothing great", new double[] { 0, 0, 1 }),
-                ("Okay quality average experience", new double[] { 0, 0, 1 }),
-                ("Acceptable but not amazing", new double[] { 0, 0, 1 }),
-                ("Mediocre nothing to complain about", new double[] { 0, 0, 1 }),
-                ("Standard product as expected", new double[] { 0, 0, 1 }),
-                ("Adequate serves its purpose", new double[] { 0, 0, 1 })
-            };
+            // Load training data from file
+            var trainingData = LoadTrainingData("training_data.csv");
 
             Console.WriteLine("Training True Neural Network for Sentiment Analysis");
             Console.WriteLine("===================================================\n");
