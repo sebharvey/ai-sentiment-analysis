@@ -306,3 +306,388 @@ neutral,Honest average quality
 neutral,It's just okay
 neutral,Just meets standards
 neutral,Kind of average
+
+# Enhanced Training Data - Realistic Product, Restaurant & Service Reviews
+# Format: sentiment,review text
+# Created: December 2024
+# Total examples: 500+ realistic, wordy reviews
+
+# ============================================================================
+# AMAZON PRODUCT REVIEWS - POSITIVE
+# ============================================================================
+
+positive,I absolutely love this coffee maker and have been using it every single morning for the past three months without any issues whatsoever
+positive,This laptop exceeded all of my expectations in terms of performance and battery life which easily lasts me through an entire work day
+positive,After reading countless reviews I finally purchased this vacuum cleaner and I must say it has completely transformed my weekly cleaning routine
+positive,The build quality on this wireless headset is outstanding and the sound quality is crystal clear even when I am taking calls in noisy environments
+positive,I was sceptical at first but this air fryer has genuinely changed the way I cook and I find myself using it almost every single day now
+positive,My children absolutely adore this educational tablet and I have noticed significant improvements in their reading skills since we bought it
+positive,This standing desk was incredibly easy to assemble and the electric height adjustment works smoothly and quietly which I really appreciate
+positive,The customer service team went above and beyond to help me resolve a minor issue and I could not be more impressed with their professionalism
+positive,I have owned this blender for over two years now and it still works just as well as the day I bought it which speaks volumes about its durability
+positive,This gaming mouse has completely transformed my gameplay experience with its incredible precision and customisable buttons that suit my style perfectly
+positive,The wireless charging pad works flawlessly with all of my devices and the sleek design looks absolutely brilliant on my bedside table
+positive,I purchased this robot vacuum as a gift for my elderly mother and she says it has made her life so much easier and she uses it daily
+positive,The noise cancelling feature on these headphones is absolutely phenomenal and I can now work in complete peace even in busy coffee shops
+positive,This smartphone camera takes the most stunning photos I have ever seen and the night mode feature is particularly impressive in low light conditions
+positive,The mattress arrived well packaged and after sleeping on it for a month I can honestly say my back pain has significantly improved
+positive,I was amazed by how quickly this portable charger powers up my devices and it holds enough charge to last me through several days of travel
+positive,This kitchen knife set is exceptionally sharp and well balanced making food preparation an absolute pleasure rather than a tedious chore
+positive,The espresso machine produces café quality coffee right in my own kitchen and the milk frother creates the most perfect microfoam every single time
+positive,I have tried numerous fitness trackers over the years but this one is by far the most accurate and comfortable to wear throughout the day and night
+positive,This office chair has dramatically improved my posture and the lumbar support is exactly what I needed after years of suffering from lower back pain
+positive,The smart thermostat has already saved me a considerable amount on my energy bills and the app makes it incredibly easy to control from anywhere
+positive,I bought this pressure cooker three months ago and it has completely revolutionised my meal preparation allowing me to create healthy dinners in minutes
+positive,The picture quality on this television is absolutely stunning with vibrant colours and deep blacks that make watching films feel like a cinema experience
+positive,This electric toothbrush has made such a noticeable difference to my dental health and my dentist even commented on how much cleaner my teeth look
+positive,The waterproof case for my phone worked perfectly during my recent beach holiday and I was able to take amazing underwater photos without any worries
+positive,I am thoroughly impressed with this slow cooker as it consistently produces tender and flavourful meals with minimal effort required on my part
+positive,This mechanical keyboard has transformed my typing experience with satisfying tactile feedback and I now actually enjoy writing long documents
+positive,The cordless drill has more than enough power for all of my DIY projects and the battery life is exceptional lasting through multiple tasks
+positive,I purchased this air purifier for my allergies and within just a few days I noticed a significant improvement in my breathing and sleep quality
+positive,This webcam produces incredibly clear video quality even in less than ideal lighting conditions which has been perfect for my remote work meetings
+positive,The instant pot has become an absolute essential in my kitchen and I use it at least four times a week for everything from rice to whole chickens
+positive,I bought this ergonomic mouse to help with my wrist pain and after just two weeks of use I have noticed a dramatic reduction in discomfort
+positive,This portable speaker delivers surprisingly powerful sound for its compact size and the battery easily lasts through entire weekend camping trips
+positive,The quality of construction on this watch is absolutely superb and it looks just as elegant as watches costing three times the price
+positive,I have been using this water flosser for six months now and my gums have never been healthier according to my dental hygienist
+positive,This dash cam has given me such peace of mind whilst driving and the video quality is excellent even when recording at night in the dark
+positive,The steam mop has made cleaning my floors so much faster and easier and I love that I do not have to use any harsh chemical cleaners
+positive,I am absolutely delighted with this smart doorbell as it allows me to see and speak to visitors even when I am away from home which is brilliant
+positive,This electric kettle boils water remarkably quickly and the temperature control feature is perfect for brewing different types of tea properly
+positive,The noise level on this dishwasher is impressively quiet and I can barely hear it running even when I am sitting in the adjacent room
+
+# ============================================================================
+# AMAZON PRODUCT REVIEWS - NEGATIVE
+# ============================================================================
+
+negative,I am extremely disappointed with this product as it stopped working completely after just three weeks of normal use which is utterly unacceptable
+negative,The quality of this item is absolutely terrible and it feels incredibly cheap and flimsy like it was made from the lowest quality materials available
+negative,I followed the instructions exactly as written but this device simply does not work properly and customer service has been completely unhelpful
+negative,This is honestly the worst purchase I have made in years and I deeply regret not reading more of the negative reviews before buying it
+negative,The product arrived damaged despite being advertised as new and the seller has refused to provide a refund or replacement which is completely unfair
+negative,I am very frustrated with this laptop as it runs incredibly slowly and frequently crashes even when I am only performing basic tasks like browsing
+negative,The battery life on this device is absolutely appalling and barely lasts two hours despite the manufacturer claiming it would last an entire day
+negative,This vacuum cleaner is completely useless on carpets and just pushes the dirt around rather than actually picking it up which defeats the purpose
+negative,I wasted my money on this kitchen gadget as it broke during the very first use and now I am stuck with something completely worthless
+negative,The noise level on this appliance is unbearably loud and it sounds like a jet engine taking off every time I try to use it in my kitchen
+negative,This product looks nothing like the pictures shown online and I feel completely misled by the false advertising and deceptive marketing tactics
+negative,The assembly instructions were completely incomprehensible and several important parts were missing from the package which made it impossible to build
+negative,I have tried multiple times to contact customer support about this defective item but nobody has responded to any of my emails or phone calls
+negative,This charger stopped working after only one week and now it will not charge any of my devices no matter what I try to do to fix it
+negative,The quality control on this product is clearly non existent as mine arrived with obvious scratches and dents all over the exterior surface
+negative,I am thoroughly dissatisfied with this purchase as it performs far worse than my previous model which cost half the price and lasted years longer
+negative,This smart device constantly disconnects from my WiFi network and the app crashes repeatedly making it virtually impossible to use as intended
+negative,The material used for this item is extremely poor quality and started to fall apart and deteriorate after just a handful of uses which is ridiculous
+negative,I specifically ordered this in black but received it in white instead and the returns process has been an absolute nightmare to deal with
+negative,This tool is completely ineffective for its intended purpose and I honestly cannot understand how it received such positive reviews from other customers
+negative,The product description was wildly inaccurate and the actual item I received was significantly smaller and cheaper looking than I was expecting
+negative,I have owned this for less than a month and it has already developed multiple serious problems that make it essentially unusable at this point
+negative,The customer service experience was absolutely dreadful with rude representatives who seemed completely uninterested in helping resolve my legitimate issues
+negative,This is poorly designed and extremely uncomfortable to use for more than a few minutes at a time which makes it completely impractical for daily use
+negative,I feel completely ripped off by this purchase as the quality is atrocious and it is definitely not worth even half of what I paid for it
+negative,The performance of this device is laughably bad and it struggles to complete even the simplest tasks that similar products handle with ease
+negative,This product arrived three weeks late despite paying extra for expedited shipping and the company refused to refund the shipping charges
+negative,I am incredibly frustrated that this item requires proprietary batteries that are expensive and difficult to find instead of using standard sizes
+negative,The warranty process has been an absolute joke with the manufacturer denying my valid claim on ridiculous technicalities and unhelpful excuses
+negative,This is terribly made with sharp edges and rough surfaces that feel dangerous to handle and nothing like the smooth finish shown in photos
+negative,I have never been more disappointed with an online purchase and I will definitely be avoiding this brand entirely in the future without question
+negative,The functionality promised in the marketing materials simply does not exist in the actual product which feels like blatant false advertising to me
+negative,This broke within hours of opening the package and attempting to use it for the first time which suggests terrible quality control standards
+negative,The software on this device is buggy and crashes constantly making it frustrating and unreliable for any serious work or important tasks
+negative,I expected much better quality given the premium price point but what I received was cheap rubbish that belongs in a discount bargain bin
+negative,This product is a complete waste of money and I wish I had simply bought the more expensive alternative from a reputable brand instead
+negative,The build quality is so poor that pieces started falling off after minimal use and now it is held together with tape which is embarrassing
+negative,I am shocked by how poorly this performs compared to the glowing reviews and I suspect many of those positive ratings must be fake or paid
+negative,This item is far too complicated to use and the manual is virtually useless with vague instructions and missing information throughout
+negative,The smell emanating from this product is absolutely horrendous and chemical like and has not dissipated even after weeks of airing it out
+
+# ============================================================================
+# AMAZON PRODUCT REVIEWS - NEUTRAL
+# ============================================================================
+
+neutral,This product does exactly what it claims to do but nothing more and I would say it represents reasonable value for the price I paid
+neutral,The quality is acceptable for everyday use though I have noticed some minor issues that are not deal breakers but slightly annoying nevertheless
+neutral,It works as advertised and gets the job done adequately but I was not particularly impressed by any specific features or performance aspects
+neutral,This is a decent option if you are on a budget but if you can afford to spend a bit more I would recommend looking at other alternatives
+neutral,The build quality is okay and it feels reasonably sturdy though I do have some concerns about how well it will hold up over extended use
+neutral,I have mixed feelings about this purchase as some aspects are quite good whilst others are rather disappointing so it averages out to mediocre
+neutral,This product is perfectly functional and serves its basic purpose but it lacks any standout features that would make me enthusiastic about recommending it
+neutral,The performance is neither impressive nor terrible and it simply does what you would expect from a mid range product in this category
+neutral,It arrived on time and works as described but the overall experience has been rather unremarkable and forgettable if I am being honest
+neutral,The instructions could be clearer but with some patience I managed to figure it out and it now works acceptably well for my needs
+neutral,This is an average product that will suffice for most people but those looking for premium quality should probably consider other options instead
+neutral,The design is fairly basic and functional without being particularly attractive or innovative but it does the job it was designed for adequately
+neutral,I would describe this as a solid middle of the road choice that neither excites nor disappoints and represents fair value for money spent
+neutral,The features are limited compared to more expensive models but for casual users who do not need bells and whistles it should be sufficient
+neutral,It takes a bit of getting used to and has a learning curve but once you understand how it works it performs its function reasonably well
+neutral,This met my minimum requirements but did not exceed them in any meaningful way so I would say my expectations were met but not surpassed
+neutral,The quality seems acceptable for the price point though I would not expect it to last as long as more expensive alternatives on the market
+neutral,It works fine for my purposes but I can see how someone with more demanding needs might find it somewhat lacking in certain areas
+neutral,This is a practical and sensible choice for basic everyday use but do not expect any premium features or exceptional performance from it
+neutral,The product arrived as described and functions properly but there is nothing particularly special or noteworthy about it that stands out to me
+neutral,I would say this represents decent value though the quality is not amazing and I have some minor reservations about its long term durability
+neutral,It does the job adequately and I have no major complaints but I am not overwhelmingly satisfied either so it is a rather neutral experience overall
+neutral,The performance is consistent and reliable if unspectacular and it handles basic tasks competently without any significant issues or problems
+neutral,This is a reasonable purchase for someone who needs something functional without requiring top tier quality or cutting edge features in particular
+neutral,The user interface is somewhat dated and could use improvement but once you get familiar with it the product works well enough for everyday tasks
+neutral,I would categorise this as an acceptable budget option that makes some compromises on quality and features to achieve a lower price point
+neutral,It functions as intended and I have not encountered any serious problems but I am also not particularly impressed by anything about it either
+neutral,This is a standard product that delivers on its basic promises without offering anything extra or exceptional that would distinguish it from competitors
+neutral,The quality is passable and it should last a reasonable amount of time with normal use though I would not expect it to be particularly durable long term
+neutral,It serves its purpose adequately and represents fair value for what you pay but there are certainly better options available if you can spend more money
+
+# ============================================================================
+# RESTAURANT REVIEWS - POSITIVE
+# ============================================================================
+
+positive,We had the most wonderful dining experience at this restaurant last night with absolutely impeccable service and the food was cooked to perfection
+positive,The atmosphere in this establishment is warm and inviting and the staff were incredibly attentive without being intrusive which I really appreciated
+positive,I have been to this restaurant three times now and each visit has been consistently excellent with creative dishes that never fail to impress me
+positive,The Sunday roast here is genuinely the best I have ever had with tender meat beautiful vegetables and the most incredible homemade Yorkshire puddings
+positive,We celebrated our anniversary at this lovely restaurant and the team went out of their way to make the evening special with complimentary champagne
+positive,The tasting menu was an absolute revelation with each course more impressive than the last and the wine pairings were absolutely spot on throughout
+positive,This hidden gem serves the most authentic Italian cuisine I have tasted outside of Italy and the pasta is clearly made fresh on the premises daily
+positive,The seafood platter was outstanding with the freshest fish and shellfish I have had in years and the presentation was absolutely beautiful as well
+positive,Our waiter was knowledgeable friendly and made excellent recommendations that perfectly suited our tastes and dietary requirements without any fuss
+positive,The chef personally came to our table to check we were enjoying everything which was a lovely touch and shows genuine pride in the food served
+positive,I was blown away by the quality of the ingredients and the skill evident in every dish from the appetisers right through to the delicious desserts
+positive,This cosy neighbourhood bistro has become our favourite local spot with consistently delicious food and a wonderful welcoming family atmosphere
+positive,The vegetarian options here are creative and flavourful rather than being afterthoughts and my non vegetarian friends were equally impressed by their meals
+positive,We had afternoon tea here last weekend and it was absolutely delightful with delicate finger sandwiches beautiful scones and an impressive selection of teas
+positive,The brunch menu offers something for everyone and the eggs benedict I ordered was cooked perfectly with a rich hollandaise sauce that was divine
+positive,This steakhouse serves the finest quality meat cooked exactly to my specifications and the sides were equally impressive especially the truffle chips
+positive,The wine list is extensive and thoughtfully curated with options to suit all budgets and our sommelier helped us find the perfect bottle for our meal
+positive,We were running late for our reservation but the staff were completely understanding and still gave us a wonderful table with a lovely view of the garden
+positive,The attention to detail in both the food and the presentation is remarkable and you can tell that the kitchen team take real pride in their work
+positive,This restaurant offers exceptional value for money given the quality of ingredients and skill involved in preparing each beautifully crafted dish
+
+# ============================================================================
+# RESTAURANT REVIEWS - NEGATIVE
+# ============================================================================
+
+negative,We waited over an hour for our food to arrive and when it finally came it was cold and completely different from what we had actually ordered
+negative,The service at this restaurant was absolutely appalling with rude staff who seemed annoyed by our presence and made us feel completely unwelcome
+negative,I found a hair in my main course which was disgusting and when I complained the manager was dismissive and offered no apology or compensation whatsoever
+negative,The prices are extortionate for what you receive and the portion sizes were laughably small leaving us still hungry after spending a fortune
+negative,This has to be the worst dining experience I have ever had with burnt food terrible service and an overall atmosphere that was depressing and uncomfortable
+negative,The restaurant was filthy with dirty tables sticky menus and questionable hygiene standards that made me seriously concerned about food safety
+negative,We booked a table weeks in advance but when we arrived they claimed to have no record of our reservation and refused to accommodate us despite being half empty
+negative,The food was bland and completely lacking in flavour as if the kitchen had forgotten that seasoning exists and the presentation was sloppy and unappealing
+negative,Our waiter was incredibly pushy trying to upsell expensive items and made us feel pressured throughout the entire meal which ruined the experience
+negative,The noise level was unbearable with music so loud we could not hold a conversation and the tables were crammed so close together we had no privacy
+negative,I specifically mentioned my severe nut allergy when ordering but my dish arrived containing nuts which could have been extremely dangerous for me
+negative,The restaurant ran out of half the items on the menu which seems completely unacceptable for a supposedly upmarket establishment on a Saturday evening
+negative,We were charged for items we never received and when we questioned the bill the staff became defensive and argumentative rather than apologetic
+negative,The quality of the ingredients was clearly subpar with limp vegetables tough meat and everything tasted like it had been sitting under heat lamps for hours
+negative,This place tries to be fancy but fails miserably with pretentious food descriptions that do not match the mediocre dishes that actually arrive at the table
+negative,The booking system is a complete shambles and they had double booked our table meaning we had to wait forty minutes despite having a confirmed reservation
+negative,The bathroom facilities were disgusting and completely unhygienic which speaks volumes about the overall standards and cleanliness of this establishment
+negative,We were rushed through our meal with staff clearing plates before we had finished eating and bringing the bill before we had even requested it
+negative,The wine I ordered was corked and off but the waiter insisted it was fine and refused to replace it which shows a complete lack of proper wine service knowledge
+negative,I would not recommend this restaurant to anyone as the entire experience from start to finish was disappointing stressful and not worth the money spent at all
+
+# ============================================================================
+# RESTAURANT REVIEWS - NEUTRAL
+# ============================================================================
+
+neutral,The food was acceptable and the service was fine but nothing about the experience particularly stood out as memorable or special to me
+neutral,This restaurant serves decent pub grub at reasonable prices and whilst it will not win any awards it is a reliable option for a casual meal out
+neutral,The menu offers a good variety of options and the food was properly cooked though I would not say any of the dishes were especially exciting or innovative
+neutral,We had a pleasant enough evening here though the food took slightly longer than expected to arrive and some dishes were better than others in quality
+neutral,The atmosphere is fairly standard for this type of restaurant and the service was competent if not particularly warm or attentive throughout our visit
+neutral,I would describe this as a solid middle of the road dining option that is convenient and reliable but not somewhere I would go for a special occasion
+neutral,The portions were reasonable and the food was well presented though I felt the flavours could have been more pronounced and exciting overall
+neutral,This place is fine for a quick lunch or casual dinner but do not expect anything particularly memorable or impressive from the culinary experience
+neutral,The staff were polite and efficient though not especially friendly and the overall experience was perfectly adequate without being anything special
+neutral,The pricing seems fair for what you receive and the food quality is consistent with similar establishments in the area at this price point
+neutral,We were seated promptly and the service was reasonably quick though I felt the overall experience lacked any real personality or distinctive character
+neutral,The restaurant was clean and comfortable though the decor is quite dated and could benefit from some modernisation to improve the ambience
+neutral,The children's menu offers good options for families and the staff were accommodating though the adult menu felt somewhat limited in its choices
+neutral,This is a convenient location with adequate parking and the food is perfectly satisfactory for a casual meal though nothing exceeded my expectations
+neutral,The lunch special represents good value for money and the food quality is acceptable though I probably would not choose to dine here in the evening
+neutral,The wine selection is limited but adequate and the house wine we ordered was perfectly drinkable if not particularly memorable or special
+neutral,This restaurant does what it does competently without any major failings but also without any particular strengths that would make me eager to return soon
+neutral,The food arrived at a reasonable temperature and was seasoned adequately though I felt it lacked the finesse and attention to detail of higher end establishments
+neutral,We had a table outside which was pleasant enough though the view was nothing special and the street noise was occasionally distracting during our meal
+neutral,This is a perfectly acceptable option if you happen to be in the area but I would not make a special trip to dine here specifically based on this experience
+
+# ============================================================================
+# SERVICE REVIEWS (Hotels, Airlines, Utilities, etc) - POSITIVE
+# ============================================================================
+
+positive,The hotel staff went absolutely above and beyond to ensure our stay was perfect and they even upgraded our room to a suite as a lovely surprise
+positive,The airline handled my delayed connection brilliantly rebooking me on the next available flight and providing meal vouchers and accommodation without any hassle
+positive,Our broadband provider resolved the connection issue within two hours of reporting it and the engineer was professional courteous and extremely efficient
+positive,The spa treatment I received was absolutely heavenly and the therapist was skilled attentive and created such a relaxing atmosphere throughout the session
+positive,The car rental company made the entire process seamless from pickup to return and the vehicle was immaculate and exactly as described in the booking
+positive,The customer service representative I spoke to was incredibly patient and helpful walking me through each step until my problem was completely resolved
+positive,The hotel concierge provided excellent recommendations for local restaurants and attractions and even made reservations on our behalf which was wonderful
+positive,My insurance claim was processed quickly and efficiently and the assessor was sympathetic professional and kept me informed throughout the entire process
+positive,The gym membership includes access to excellent facilities with modern equipment and the personal trainers are knowledgeable friendly and very motivating
+positive,The delivery driver went out of their way to ensure my package arrived safely even calling ahead to confirm I would be home which I really appreciated
+positive,The dental practice runs like clockwork with minimal waiting times and the dentist explained everything clearly and made me feel completely at ease throughout
+positive,The bank manager took the time to understand my financial situation and recommended products that genuinely suited my needs rather than just trying to sell
+positive,The hairdresser listened carefully to what I wanted and delivered exactly that plus some brilliant styling advice that has completely transformed my look
+positive,The removal company handled all of our belongings with such care and the team worked efficiently to complete the move ahead of schedule which was fantastic
+positive,The veterinary clinic provided exceptional care for my poorly dog and the staff were compassionate professional and available for follow up questions any time
+positive,The taxi driver was punctual polite and knowledgeable about the area taking the most efficient route and making pleasant conversation during the journey
+positive,The theatre staff were welcoming and helpful and the venue itself was beautifully maintained with excellent sight lines and comfortable seating throughout
+positive,The cruise ship exceeded all expectations with attentive staff gourmet dining options and entertainment that catered perfectly to all ages and interests
+positive,The utility company credited my account immediately when they discovered the billing error and apologised sincerely for any inconvenience caused to me
+positive,The physiotherapist developed a personalised treatment plan that has significantly improved my mobility and the clinic always runs to schedule which is brilliant
+
+# ============================================================================
+# SERVICE REVIEWS - NEGATIVE  
+# ============================================================================
+
+negative,The hotel room was filthy upon arrival with stained sheets and mould in the bathroom and when I complained the staff were completely indifferent to my concerns
+negative,The airline lost my luggage and after two weeks of chasing them I still have not received any compensation or even a sincere apology for the terrible service
+negative,Our internet has been down for five days now and despite multiple phone calls the broadband provider keeps giving us different excuses and unhelpful responses
+negative,The spa cancelled my booking with just two hours notice despite me having booked and paid for the treatment over a month in advance which was completely unacceptable
+negative,The rental car had mechanical problems within an hour of collection and the company refused to provide a replacement or refund which left us stranded on holiday
+negative,I have been trying to cancel this subscription for three months but the customer service team makes it deliberately difficult and continues to charge my card
+negative,The hotel charged my credit card twice for the same stay and despite promising to refund the duplicate charge weeks ago I am still waiting for my money back
+negative,My insurance company denied my legitimate claim on ridiculous technicalities and the appeals process has been deliberately obstructive and frustrating throughout
+negative,The gym equipment is constantly broken and the facilities are poorly maintained with dirty changing rooms and a swimming pool that is always either too cold or closed
+negative,The delivery company left my expensive package outside in the rain without knocking despite me being home all day and now the contents are completely ruined
+negative,The dentist was running over an hour late for my appointment with no apology or explanation and then rushed through the treatment without any care or attention
+negative,The bank incorrectly reported me to credit agencies for missed payments that I had actually made on time and fixing this error has been an absolute nightmare
+negative,The hairdresser completely butchered my hair doing the exact opposite of what I asked for and then had the audacity to charge full price for the disaster
+negative,The removal company damaged multiple pieces of furniture and their insurance process is deliberately complicated and designed to avoid paying out legitimate claims
+negative,The veterinary clinic misdiagnosed my pet's condition and the expensive treatment they recommended was completely unnecessary according to a second opinion I sought
+negative,The taxi driver took an unnecessarily long route running up the meter and was rude when I questioned the fare which felt like a deliberate attempt to overcharge tourists
+negative,The theatre had double booked our seats and rather than finding a solution they simply refunded our tickets forcing us to miss the show we had travelled to see
+negative,The cruise ship was overcrowded with long queues for everything and the food quality was terrible considering the premium price we paid for this disappointing holiday
+negative,The utility company continues to send incorrect bills despite numerous calls to correct the error and their customer service is utterly incompetent and unhelpful
+negative,The physiotherapist was dismissive of my pain concerns and the treatment actually made my condition worse rather than better which has been extremely frustrating
+
+# ============================================================================
+# SERVICE REVIEWS - NEUTRAL
+# ============================================================================
+
+neutral,The hotel was clean and comfortable though somewhat dated in its decor and amenities and the staff were polite if not particularly warm or engaging
+neutral,The flight departed on time and arrived as scheduled though the legroom was limited and the in flight meal was fairly basic but edible enough
+neutral,The broadband service is generally reliable with occasional dropouts and the customer service is adequate though sometimes difficult to reach by phone
+neutral,The spa facilities were acceptable and well maintained though the treatment itself was competent rather than exceptional and I left feeling reasonably relaxed
+neutral,The car rental process was straightforward and the vehicle was clean and functional though the additional insurance costs were higher than I had anticipated
+neutral,The customer service representative was polite and followed the script but seemed unable to deviate from standard responses to address my specific concerns
+neutral,The hotel location was convenient though the surrounding area was not particularly attractive and the room was functional if somewhat small for the price
+neutral,The insurance policy seems comprehensive though the documentation is dense and difficult to understand and I hope I never actually need to make a claim
+neutral,The gym has adequate equipment and facilities though it can get quite crowded at peak times and some of the machines could do with maintenance or replacement
+neutral,The delivery arrived within the estimated timeframe though the packaging was somewhat battered and I was glad the contents were not fragile or easily damaged
+neutral,The dental appointment ran roughly on time and the treatment was completed competently though I did not feel the dentist was particularly thorough in their examination
+neutral,The bank offers standard products and services at competitive rates though nothing particularly stands out as exceptional or innovative about their offerings
+neutral,The haircut was acceptable and the stylist did what I asked for though they were not particularly chatty or friendly and it felt like a functional transaction
+neutral,The removal company completed the job without major incident though they were not as careful with boxes as I would have liked and some items shifted during transit
+neutral,The veterinary appointment was routine and the vet seemed competent though they were quite busy and I felt somewhat rushed through the consultation process
+neutral,The taxi arrived promptly and got me to my destination safely though the driver was not particularly conversational and the vehicle could have been cleaner inside
+neutral,The theatre seats were reasonably comfortable and the show was enjoyable though the interval drinks prices were extortionate and the facilities could be improved
+neutral,The cruise provided a relaxing break though some of the advertised activities were cancelled and the cabin was smaller than expected from the brochure photos
+neutral,The utility bills arrive on time and are generally accurate though the online account system is not particularly user friendly and could be more intuitive to navigate
+neutral,The physiotherapy sessions seem to be helping gradually though progress is slower than I hoped and it is difficult to get appointments at convenient times for me
+
+# ============================================================================
+# ADDITIONAL PRODUCT REVIEWS - ELECTRONICS & HOME GOODS - POSITIVE
+# ============================================================================
+
+positive,This smart watch has completely exceeded my expectations with accurate fitness tracking excellent battery life and seamless integration with my smartphone
+positive,The ergonomic office setup I purchased has transformed my work from home experience and I no longer suffer from the neck and shoulder pain I used to have daily
+positive,I bought this slow cooker six months ago and it has genuinely revolutionised my approach to meal planning allowing me to prepare delicious healthy dinners effortlessly
+positive,The wireless earbuds deliver exceptional sound quality with deep bass and crystal clear highs and they stay securely in place even during intense workout sessions
+positive,This dehumidifier has completely solved our damp problem and the difference in air quality throughout the house has been remarkable in just a few weeks
+positive,The LED desk lamp provides perfect lighting for reading and working with multiple brightness settings and a colour temperature that reduces eye strain significantly
+positive,I am thoroughly impressed with this food processor which makes meal preparation so much faster and easier with powerful blades that handle everything I throw at it
+positive,The weighted blanket has dramatically improved my sleep quality and I now fall asleep faster and wake up feeling more refreshed than I have in years
+positive,This electric pressure washer has made cleaning our patio and driveway an absolute breeze and the results are better than I could have hoped for
+positive,The portable air conditioner kept our bedroom comfortably cool during the recent heatwave and was surprisingly quiet compared to other models I have used before
+
+# ============================================================================
+# ADDITIONAL PRODUCT REVIEWS - ELECTRONICS & HOME GOODS - NEGATIVE
+# ============================================================================
+
+negative,This smart home device constantly fails to connect to WiFi and the app is buggy and crashes frequently making it essentially useless despite its high price tag
+negative,The electric heater I purchased is incredibly inefficient and barely warms the room despite running continuously and driving up my electricity bills dramatically
+negative,This coffee grinder broke after less than a month of normal use and the company has been completely unresponsive to my warranty claim which is outrageous
+negative,The bluetooth speaker has terrible sound quality with distorted audio and virtually no bass and the battery drains in less than an hour of use
+negative,I deeply regret purchasing this smart doorbell as it frequently fails to detect visitors and the video quality is grainy and pixelated even in good lighting
+negative,The desk fan is far too noisy to use whilst working and it provides barely any airflow despite being on the highest setting which makes it completely pointless
+negative,This memory foam pillow has completely lost its shape after just two weeks and now provides no support whatsoever leaving me with worse neck pain than before
+negative,The garden tools I ordered are made from extremely cheap metal that bends easily and they feel like they will break with any serious use at all
+negative,This printer is an absolute nightmare with constant paper jams terrible print quality and ink cartridges that run out ridiculously quickly at extortionate prices
+negative,The electric blanket stopped heating properly after one week and now has cold spots throughout making it useless for its intended purpose of keeping warm
+
+# ============================================================================
+# ADDITIONAL PRODUCT REVIEWS - ELECTRONICS & HOME GOODS - NEUTRAL  
+# ============================================================================
+
+neutral,This monitor does the job adequately for basic office work though the colour accuracy is not particularly impressive and the stand is not height adjustable
+neutral,The storage containers are functional and stack neatly though the lids do not seal quite as tightly as I would like and some have already started to warp slightly
+neutral,This desk organiser provides reasonable storage for stationery items though the quality feels a bit flimsy and I am not convinced it will last particularly long
+neutral,The electric toothbrush works fine and cleans my teeth adequately though it is not noticeably better than my previous manual brush and the replacement heads are expensive
+neutral,This laptop stand is functional and holds my computer at a reasonable angle though the build quality is mediocre and it slides around on my desk occasionally
+neutral,The plant pots are acceptable for the price and drain water properly though they are made from thin plastic that feels like it could crack quite easily
+neutral,This dish rack holds a reasonable amount of dishes and drains effectively though it takes up more counter space than I would ideally like in my small kitchen
+neutral,The shower curtain does its job of keeping water contained though the material feels cheap and I suspect it may need replacing sooner than more expensive options
+neutral,This extension lead provides adequate additional sockets and works as expected though the cable could be longer and the build quality feels somewhat basic
+neutral,The picture frames display photos nicely enough though the glass is thin and the backing clips feel flimsy like they might break if handled roughly
+
+# ============================================================================
+# FOOD & GROCERY REVIEWS - POSITIVE
+# ============================================================================
+
+positive,This organic coffee has the most wonderful rich flavour with subtle notes of chocolate and caramel and it has completely ruined me for any other brands now
+positive,The artisan bread from this bakery is absolutely exceptional with a perfect crust and soft fluffy interior that tastes like it was baked by a French master
+positive,I cannot recommend this hot sauce highly enough as it has the perfect balance of heat and flavour without being overwhelmingly spicy or one dimensional
+positive,The premium dark chocolate I ordered is sublime with a smooth texture and complex flavour profile that makes cheap chocolate taste like wax in comparison
+positive,This olive oil is genuinely the finest I have ever tasted with a beautiful peppery finish that elevates even the simplest salad or pasta dish magnificently
+positive,The organic honey is absolutely delicious with a complex floral flavour and it is clear that the bees were well cared for and produced exceptional quality
+positive,These gluten free biscuits are remarkably tasty and you honestly would not know they were free from wheat if nobody told you which is quite impressive
+positive,The aged cheddar cheese has an incredible depth of flavour with perfect crystalline texture and it is absolutely worth every penny of the premium price
+positive,This protein powder mixes smoothly without any grittiness and actually tastes pleasant rather than like the chalky chemical flavour of cheaper alternatives
+positive,The specialty tea blend has the most wonderful aroma and flavour with perfectly balanced notes that create a truly relaxing and enjoyable drinking experience
+
+# ============================================================================
+# FOOD & GROCERY REVIEWS - NEGATIVE
+# ============================================================================
+
+negative,This energy drink tastes absolutely vile like chemical syrup and gave me jitters and a headache rather than any useful boost of energy whatsoever
+negative,The ready meal I purchased was disgusting with a strange artificial taste and texture like rubber and I could not even finish half of it before giving up
+negative,This brand of cereal is sickeningly sweet and tastes nothing like the real fruit it claims to contain and my children refused to eat it after trying one bowl
+negative,The canned soup was watery and completely lacking in flavour as if someone had just heated up dishwater and added a few token vegetables as an afterthought
+negative,This protein bar tastes like sweetened cardboard and has a chalky texture that makes it almost impossible to swallow without drinking lots of water
+negative,The frozen pizza was absolutely terrible with a soggy base sparse toppings and cheese that tasted like plastic and I threw most of it in the bin
+negative,This instant coffee is utterly undrinkable with a burnt acrid taste that bears no resemblance to actual coffee and I regret buying such a large container
+negative,The jarred pasta sauce was bland watery and tasted nothing like homemade with an odd metallic aftertaste that ruined the entire meal for me
+negative,This energy bar is far too chewy almost to the point of breaking teeth and has an unpleasant artificial sweetener taste that lingers for hours afterwards
+negative,The breakfast cereal went stale almost immediately after opening despite being sealed and now tastes like I am eating handfuls of cardboard for breakfast
+
+# ============================================================================
+# FOOD & GROCERY REVIEWS - NEUTRAL
+# ============================================================================
+
+neutral,This tea is perfectly drinkable and serves its purpose as a basic everyday brew though it lacks the complexity and depth of more premium varieties
+neutral,The pasta sauce is acceptable and convenient for quick weeknight dinners though it does not compare to homemade and has a slightly processed taste
+neutral,This granola is reasonably tasty and provides decent nutrition though it is quite expensive for what you get and some batches seem sweeter than others
+neutral,The crisps are fine for an occasional snack and the flavouring is okay though nothing special and they tend to be greasier than some other brands
+neutral,This cooking oil does the job adequately for everyday frying and roasting though the flavour is fairly neutral and unremarkable in finished dishes
+neutral,The biscuits are acceptable with a cup of tea though they are a bit dry and crumbly and do not have as much flavour as I was hoping for really
+neutral,This breakfast cereal is a reasonable choice for a quick morning meal though it gets soggy quite quickly in milk and the taste is rather ordinary
+neutral,The frozen vegetables are convenient and retain decent nutritional value though the texture after cooking is not quite as good as fresh produce would be
+neutral,This fruit juice is fairly pleasant and refreshing though it is quite sweet and I suspect it contains more sugar than actual fruit content realistically
+neutral,The instant noodles are adequate for a very quick lunch when pressed for time though they are quite salty and not particularly filling or nutritious
+
+# ============================================================================
+# ADDITIONAL NEUTRAL REVIEWS - CLOTHING & ACCESSORIES
+# ============================================================================
+
+neutral,This jumper is reasonably warm and the fit is acceptable though the material feels a bit scratchy against skin and I would not call it particularly comfortable
+neutral,The trainers are adequate for casual wear and walking though they lack the cushioning and support I would want for serious running or sports activities
+neutral,This handbag is functional with sufficient pockets and compartments though the material quality is mediocre and I have concerns about long term durability
+neutral,The jeans fit well enough though the denim is quite stiff initially and required several washes before becoming comfortable to wear for extended periods
+neutral,This watch keeps time accurately and looks presentable though the strap quality is not great and has already started to show signs of wear after limited use
+neutral,The shirt is a decent basic wardrobe item and washes well though the fabric is quite thin and I can see it becoming threadbare with regular washing
+neutral,This belt does its job of holding up trousers though the buckle feels cheap and the leather quality is clearly not premium despite the mid range pricing
+neutral,The socks are comfortable enough and fit properly though they have lost some elasticity after washing and are not as durable as more expensive brands
+neutral,This jacket provides adequate protection from light rain though it is not truly waterproof and the lining has started to come loose in a few places already
+neutral,The sunglasses look decent and provide reasonable UV protection though the frames feel somewhat flimsy and I worry about them breaking if handled roughly
