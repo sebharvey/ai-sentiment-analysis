@@ -44,9 +44,7 @@ The network uses a three-layer architecture:
 
 ## How Word Embeddings Work
 
-Traditional systems use dictionaries: "excellent = +1.0, terrible = -1.0". That's cheating.
-
-This system starts with random numbers for each word and adjusts them through backpropagation. After training:
+Traditional systems use dictionaries: "excellent = +1.0, terrible = -1.0". However, this system starts with random numbers for each word and adjusts them through backpropagation. After training:
 
 - Words with similar meanings end up with similar embedding vectors
 - The network naturally learns that "brilliant" and "fantastic" are related
@@ -287,5 +285,3 @@ But the core concept would remain: learn representations from data, not dictiona
 This demonstrates that you don't need massive frameworks or GPU clusters to build something that genuinely learns. It's not going to compete with BERT, but it'll teach you more about how neural networks actually function than any high-level API ever could.
 
 The code is deliberately verbose and explicit. Every loop, every weight update, every gradient calculation is there in plain C#. No magic, no abstractions hiding the mechanics.
-
-That's the point.
