@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SentimentAnalysisApp
+namespace TrueNeuralNetworkSentiment
 {
     class Program
     {
         static void Main(string[] args)
         {
             // Create and train the sentiment analyser
-            var analyser = new SentimentAnalyser();
+            var analyser = new TrueNeuralNetworkSentimentAnalyser();
             analyser.Train();
 
             // Test sentences
@@ -22,19 +22,22 @@ namespace SentimentAnalysisApp
                 "Disappointing and frustrating experience",
                 "Pretty good overall",
                 "Worst thing I've ever bought",
-                "Horrible service, will not be returning to this resturant again",
-                "I'm not so sure on this service",
-                "I'm not so sure on this service, sometimes it's good, sometime's it's poor, but on the whole it's good."
+                "I adore this item", // Word not explicitly in training
+                "Fantastic quality"
             };
 
-            Console.WriteLine("Sentiment Analysis Neural Network\n");
-            Console.WriteLine("=================================\n");
+            Console.WriteLine("True Neural Network Sentiment Analysis\n");
+            Console.WriteLine("======================================\n");
 
             foreach (var sentence in testSentences)
             {
-                string sentiment = analyser.AnalyseSentiment(sentence);
+                var result = analyser.AnalyseSentiment(sentence);
                 Console.WriteLine($"Sentence: {sentence}");
-                Console.WriteLine($"Sentiment: {sentiment}\n");
+                Console.WriteLine($"Sentiment: {result.Sentiment}");
+                Console.WriteLine($"Confidence: {result.Confidence:P1}");
+                Console.WriteLine($"Scores - Pos: {result.PositiveScore:F3}, " +
+                                $"Neg: {result.NegativeScore:F3}, " +
+                                $"Neu: {result.NeutralScore:F3}\n");
             }
 
             Console.WriteLine("\nPress any key to exit...");
@@ -42,203 +45,291 @@ namespace SentimentAnalysisApp
         }
     }
 
-    public class SentimentAnalyser
+    /// <summary>
+    /// Result of sentiment analysis
+    /// </summary>
+    public class SentimentResult
+    {
+        public string Sentiment { get; set; }
+        public double Confidence { get; set; }
+        public double PositiveScore { get; set; }
+        public double NegativeScore { get; set; }
+        public double NeutralScore { get; set; }
+    }
+
+    /// <summary>
+    /// A true neural network sentiment analyser that learns word representations
+    /// from training data with NO hand-crafted dictionaries
+    /// </summary>
+    public class TrueNeuralNetworkSentimentAnalyser
     {
         private NeuralNetwork network;
-        private Dictionary<string, double> wordSentiments;
-        private const int INPUT_SIZE = 10; // Number of features we'll extract
-        private const int HIDDEN_SIZE = 8;  // Hidden layer neurons
-        private const int OUTPUT_SIZE = 3;  // Positive, Negative, Neutral
+        private Dictionary<string, int> vocabulary;
+        private int vocabularySize;
+        private const int EMBEDDING_SIZE = 16; // Size of learned word vectors
+        private const int HIDDEN_SIZE = 12;
+        private const int OUTPUT_SIZE = 3;
+        private double[,] wordEmbeddings; // LEARNED word representations
 
-        public SentimentAnalyser()
+        public TrueNeuralNetworkSentimentAnalyser()
         {
-            // Initialise the neural network with our layer sizes
-            network = new NeuralNetwork(INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE);
-            
-            // Create a simple sentiment dictionary for feature extraction
-            InitialiseSentimentDictionary();
+            vocabulary = new Dictionary<string, int>();
         }
 
         /// <summary>
-        /// Initialises a dictionary of words with sentiment scores
-        /// Positive words have positive scores, negative words have negative scores
+        /// Builds vocabulary from training data - extracts all unique words
+        /// This is the only "pre-processing" - just identifying unique words, not their meanings
         /// </summary>
-        private void InitialiseSentimentDictionary()
+        private void BuildVocabulary(List<string> sentences)
         {
-            wordSentiments = new Dictionary<string, double>
+            var uniqueWords = new HashSet<string>();
+
+            foreach (var sentence in sentences)
             {
-                // Positive words
-                { "love", 1.0 }, { "great", 0.8 }, { "excellent", 0.9 }, { "amazing", 0.9 },
-                { "wonderful", 0.8 }, { "fantastic", 0.9 }, { "good", 0.6 }, { "brilliant", 0.9 },
-                { "best", 0.9 }, { "happy", 0.7 }, { "perfect", 0.9 }, { "beautiful", 0.8 },
-                
-                // Negative words
-                { "hate", -1.0 }, { "terrible", -0.9 }, { "awful", -0.9 }, { "bad", -0.7 },
-                { "horrible", -0.9 }, { "worst", -1.0 }, { "poor", -0.6 }, { "disappointing", -0.7 },
-                { "frustrating", -0.7 }, { "annoying", -0.6 }, { "useless", -0.8 },
-                
-                // Neutral/mild words
-                { "okay", 0.1 }, { "fine", 0.2 }, { "acceptable", 0.2 }, { "average", 0.0 }
-            };
+                var words = Tokenize(sentence);
+                foreach (var word in words)
+                {
+                    uniqueWords.Add(word);
+                }
+            }
+
+            // Add special token for unknown words
+            vocabulary["<UNK>"] = 0;
+            int index = 1;
+            foreach (var word in uniqueWords.OrderBy(w => w))
+            {
+                vocabulary[word] = index++;
+            }
+
+            vocabularySize = vocabulary.Count;
+            Console.WriteLine($"Built vocabulary of {vocabularySize} words from training data\n");
         }
 
         /// <summary>
-        /// Trains the neural network with sample data
-        /// In a real application, you'd use a large labelled dataset
+        /// Initializes word embeddings randomly
+        /// These will be LEARNED during training to represent word meanings
+        /// </summary>
+        private void InitializeWordEmbeddings()
+        {
+            var random = new Random(42);
+            wordEmbeddings = new double[vocabularySize, EMBEDDING_SIZE];
+
+            // Initialize with small random values (Xavier initialization)
+            double scale = Math.Sqrt(2.0 / (vocabularySize + EMBEDDING_SIZE));
+            for (int i = 0; i < vocabularySize; i++)
+            {
+                for (int j = 0; j < EMBEDDING_SIZE; j++)
+                {
+                    wordEmbeddings[i, j] = (random.NextDouble() * 2 - 1) * scale;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Converts a sentence into a fixed-size feature vector by:
+        /// 1. Looking up each word's learned embedding
+        /// 2. Averaging all word embeddings in the sentence
+        /// This is called "continuous bag of words" representation
+        /// </summary>
+        private double[] SentenceToVector(string sentence)
+        {
+            var words = Tokenize(sentence);
+            var vector = new double[EMBEDDING_SIZE];
+
+            int wordCount = 0;
+            foreach (var word in words)
+            {
+                int wordIndex;
+                if (vocabulary.ContainsKey(word))
+                {
+                    wordIndex = vocabulary[word];
+                }
+                else
+                {
+                    // Unknown word - use the <UNK> token
+                    wordIndex = vocabulary["<UNK>"];
+                }
+
+                // Add this word's embedding to our sentence vector
+                for (int i = 0; i < EMBEDDING_SIZE; i++)
+                {
+                    vector[i] += wordEmbeddings[wordIndex, i];
+                }
+                wordCount++;
+            }
+
+            // Average the embeddings
+            if (wordCount > 0)
+            {
+                for (int i = 0; i < EMBEDDING_SIZE; i++)
+                {
+                    vector[i] /= wordCount;
+                }
+            }
+
+            return vector;
+        }
+
+        /// <summary>
+        /// Updates word embeddings based on the gradient
+        /// This is how the network LEARNS what words mean!
+        /// </summary>
+        private void UpdateWordEmbeddings(string sentence, double[] embeddingGradient, double learningRate)
+        {
+            var words = Tokenize(sentence);
+            int wordCount = words.Length;
+
+            if (wordCount == 0) return;
+
+            // Distribute the gradient back to each word's embedding
+            foreach (var word in words)
+            {
+                int wordIndex;
+                if (vocabulary.ContainsKey(word))
+                {
+                    wordIndex = vocabulary[word];
+                }
+                else
+                {
+                    wordIndex = vocabulary["<UNK>"];
+                }
+
+                // Update this word's embedding
+                for (int i = 0; i < EMBEDDING_SIZE; i++)
+                {
+                    wordEmbeddings[wordIndex, i] += learningRate * embeddingGradient[i] / wordCount;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Simple tokenization - splits on whitespace and punctuation
+        /// </summary>
+        private string[] Tokenize(string sentence)
+        {
+            return sentence.ToLower()
+                          .Split(new[] { ' ', ',', '.', '!', '?', ';', ':', '"', '\'' },
+                                StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        /// <summary>
+        /// Trains the network on labelled sentiment data
+        /// The network learns BOTH word embeddings AND classification weights
         /// </summary>
         public void Train()
         {
-            // Training data: pairs of sentences and their expected outputs
-            // Output format: [positive_score, negative_score, neutral_score]
-            var trainingData = new List<(string sentence, double[] expected)>
+            // Training data - in a real system, this would be thousands of examples
+            var trainingData = new List<(string sentence, double[] label)>
             {
                 // Positive examples
-                ("I love this it's amazing", new double[] { 1, 0, 0 }),
-                ("Great product excellent quality", new double[] { 1, 0, 0 }),
-                ("Wonderful experience very happy", new double[] { 1, 0, 0 }),
+                ("I love this product it is amazing", new double[] { 1, 0, 0 }),
+                ("Great quality excellent purchase", new double[] { 1, 0, 0 }),
+                ("Wonderful experience very happy with it", new double[] { 1, 0, 0 }),
                 ("Fantastic brilliant and beautiful", new double[] { 1, 0, 0 }),
                 ("Best thing ever so good", new double[] { 1, 0, 0 }),
-                
+                ("Outstanding superb quality", new double[] { 1, 0, 0 }),
+                ("Perfect exactly what I wanted", new double[] { 1, 0, 0 }),
+                ("Incredible this is awesome", new double[] { 1, 0, 0 }),
+                ("Love it highly recommend", new double[] { 1, 0, 0 }),
+                ("Excellent very pleased", new double[] { 1, 0, 0 }),
+                ("Amazing product great value", new double[] { 1, 0, 0 }),
+                ("Brilliant purchase very satisfied", new double[] { 1, 0, 0 }),
+
                 // Negative examples
                 ("I hate this terrible product", new double[] { 0, 1, 0 }),
                 ("Awful experience very bad", new double[] { 0, 1, 0 }),
                 ("Horrible and disappointing worst ever", new double[] { 0, 1, 0 }),
-                ("Frustrating and useless", new double[] { 0, 1, 0 }),
+                ("Frustrating and useless waste of money", new double[] { 0, 1, 0 }),
                 ("Poor quality hate it", new double[] { 0, 1, 0 }),
-                
+                ("Terrible do not buy", new double[] { 0, 1, 0 }),
+                ("Worst purchase disappointing", new double[] { 0, 1, 0 }),
+                ("Bad quality very unhappy", new double[] { 0, 1, 0 }),
+                ("Dreadful horrible experience", new double[] { 0, 1, 0 }),
+                ("Awful waste of time", new double[] { 0, 1, 0 }),
+                ("Disappointing poor quality", new double[] { 0, 1, 0 }),
+                ("Hate it complete waste", new double[] { 0, 1, 0 }),
+
                 // Neutral examples
-                ("It's okay nothing special", new double[] { 0, 0, 1 }),
-                ("Average product acceptable", new double[] { 0, 0, 1 }),
-                ("Fine I suppose", new double[] { 0, 0, 1 }),
-                ("Okay quality average experience", new double[] { 0, 0, 1 })
+                ("It is okay nothing special", new double[] { 0, 0, 1 }),
+                ("Average product acceptable quality", new double[] { 0, 0, 1 }),
+                ("Fine I suppose nothing great", new double[] { 0, 0, 1 }),
+                ("Okay quality average experience", new double[] { 0, 0, 1 }),
+                ("Acceptable but not amazing", new double[] { 0, 0, 1 }),
+                ("Mediocre nothing to complain about", new double[] { 0, 0, 1 }),
+                ("Standard product as expected", new double[] { 0, 0, 1 }),
+                ("Adequate serves its purpose", new double[] { 0, 0, 1 })
             };
 
-            // Train for multiple epochs (passes through the data)
-            int epochs = 1000;
-            double learningRate = 0.1;
+            Console.WriteLine("Training True Neural Network for Sentiment Analysis");
+            Console.WriteLine("===================================================\n");
 
-            Console.WriteLine("Training neural network...\n");
+            // Step 1: Build vocabulary from training sentences
+            BuildVocabulary(trainingData.Select(t => t.sentence).ToList());
+
+            // Step 2: Initialize word embeddings randomly
+            InitializeWordEmbeddings();
+
+            // Step 3: Create the neural network
+            network = new NeuralNetwork(EMBEDDING_SIZE, HIDDEN_SIZE, OUTPUT_SIZE);
+
+            // Step 4: Train the network
+            int epochs = 2000;
+            double learningRate = 0.05;
 
             for (int epoch = 0; epoch < epochs; epoch++)
             {
                 double totalError = 0;
 
-                // Go through each training example
-                foreach (var (sentence, expected) in trainingData)
-                {
-                    // Extract features from the sentence
-                    double[] features = ExtractFeatures(sentence);
+                // Shuffle training data each epoch for better learning
+                var shuffled = trainingData.OrderBy(x => Guid.NewGuid()).ToList();
 
-                    // Forward pass: get the network's prediction
-                    double[] output = network.Forward(features);
+                foreach (var (sentence, label) in shuffled)
+                {
+                    // Convert sentence to vector using current word embeddings
+                    double[] sentenceVector = SentenceToVector(sentence);
+
+                    // Forward pass through network
+                    double[] output = network.Forward(sentenceVector);
 
                     // Calculate error
                     double error = 0;
                     for (int i = 0; i < output.Length; i++)
                     {
-                        error += Math.Pow(expected[i] - output[i], 2);
+                        error += Math.Pow(label[i] - output[i], 2);
                     }
                     totalError += error;
 
-                    // Backward pass: update weights based on error
-                    network.Backward(expected, learningRate);
+                    // Backward pass through network
+                    double[] embeddingGradient = network.Backward(label, learningRate);
+
+                    // Update word embeddings (this is where words LEARN their meanings!)
+                    UpdateWordEmbeddings(sentence, embeddingGradient, learningRate);
                 }
 
-                // Print progress every 100 epochs
-                if ((epoch + 1) % 100 == 0)
+                if ((epoch + 1) % 200 == 0)
                 {
                     Console.WriteLine($"Epoch {epoch + 1}/{epochs}, Error: {totalError:F4}");
                 }
             }
 
             Console.WriteLine("\nTraining complete!\n");
+            Console.WriteLine("The network has learned:");
+            Console.WriteLine("1. Word embeddings (what each word means)");
+            Console.WriteLine("2. How to classify sentiments from word meanings\n");
         }
 
         /// <summary>
-        /// Extrazes features from a sentence to feed into the neural network
-        /// Returns a fixed-size array of numerical features
+        /// Analyses sentiment of any sentence, even with words not seen during training
         /// </summary>
-        private double[] ExtractFeatures(string sentence)
+        public SentimentResult AnalyseSentiment(string sentence)
         {
-            sentence = sentence.ToLower();
-            string[] words = sentence.Split(new[] { ' ', ',', '.', '!', '?' }, 
-                                          StringSplitOptions.RemoveEmptyEntries);
+            // Convert sentence to vector using learned embeddings
+            double[] sentenceVector = SentenceToVector(sentence);
 
-            double[] features = new double[INPUT_SIZE];
+            // Get prediction from network
+            double[] output = network.Forward(sentenceVector);
 
-            // Feature 1: Average sentiment score from dictionary
-            double sentimentSum = 0;
-            int sentimentWordCount = 0;
-            foreach (var word in words)
-            {
-                if (wordSentiments.ContainsKey(word))
-                {
-                    sentimentSum += wordSentiments[word];
-                    sentimentWordCount++;
-                }
-            }
-            features[0] = sentimentWordCount > 0 ? sentimentSum / sentimentWordCount : 0;
-
-            // Feature 2: Maximum positive sentiment in sentence
-            features[1] = words.Where(w => wordSentiments.ContainsKey(w))
-                              .Select(w => wordSentiments[w])
-                              .DefaultIfEmpty(0)
-                              .Max();
-
-            // Feature 3: Minimum sentiment (most negative) in sentence
-            features[2] = words.Where(w => wordSentiments.ContainsKey(w))
-                              .Select(w => wordSentiments[w])
-                              .DefaultIfEmpty(0)
-                              .Min();
-
-            // Feature 4: Count of positive words
-            features[3] = words.Count(w => wordSentiments.ContainsKey(w) && wordSentiments[w] > 0.5) / 10.0;
-
-            // Feature 5: Count of negative words
-            features[4] = words.Count(w => wordSentiments.ContainsKey(w) && wordSentiments[w] < -0.5) / 10.0;
-
-            // Feature 6: Sentence length (normalized)
-            features[5] = Math.Min(words.Length / 20.0, 1.0);
-
-            // Feature 7: Presence of exclamation marks
-            features[6] = sentence.Contains('!') ? 1.0 : 0.0;
-
-            // Feature 8: Presence of question marks
-            features[7] = sentence.Contains('?') ? 1.0 : 0.0;
-
-            // Feature 9: Ratio of sentiment words to total words
-            features[8] = words.Length > 0 ? (double)sentimentWordCount / words.Length : 0;
-
-            // Feature 10: Variance in sentiment scores
-            if (sentimentWordCount > 1)
-            {
-                var sentiments = words.Where(w => wordSentiments.ContainsKey(w))
-                                     .Select(w => wordSentiments[w]).ToList();
-                double mean = sentiments.Average();
-                double variance = sentiments.Sum(s => Math.Pow(s - mean, 2)) / sentiments.Count;
-                features[9] = variance;
-            }
-            else
-            {
-                features[9] = 0;
-            }
-
-            return features;
-        }
-
-        /// <summary>
-        /// Analyses the sentiment of a given sentence
-        /// Returns "Positive", "Negative", or "Neutral"
-        /// </summary>
-        public string AnalyseSentiment(string sentence)
-        {
-            // Extract features from the sentence
-            double[] features = ExtractFeatures(sentence);
-
-            // Get prediction from neural network
-            double[] output = network.Forward(features);
-
-            // Find which output neuron has the highest activation
+            // Find the highest scoring sentiment
             int maxIndex = 0;
             for (int i = 1; i < output.Length; i++)
             {
@@ -248,15 +339,21 @@ namespace SentimentAnalysisApp
                 }
             }
 
-            // Map the output to sentiment labels
             string[] sentiments = { "Positive", "Negative", "Neutral" };
-            return sentiments[maxIndex];
+
+            return new SentimentResult
+            {
+                Sentiment = sentiments[maxIndex],
+                Confidence = output[maxIndex],
+                PositiveScore = output[0],
+                NegativeScore = output[1],
+                NeutralScore = output[2]
+            };
         }
     }
 
     /// <summary>
-    /// A simple feedforward neural network with one hidden layer
-    /// Uses sigmoid activation function and backpropagation for training
+    /// Neural network that can return gradients for embedding updates
     /// </summary>
     public class NeuralNetwork
     {
@@ -264,15 +361,11 @@ namespace SentimentAnalysisApp
         private int hiddenSize;
         private int outputSize;
 
-        // Weights and biases for input->hidden layer
         private double[,] weightsInputHidden;
         private double[] biasHidden;
-
-        // Weights and biases for hidden->output layer
         private double[,] weightsHiddenOutput;
         private double[] biasOutput;
 
-        // Store activations for backpropagation
         private double[] inputLayer;
         private double[] hiddenLayer;
         private double[] outputLayer;
@@ -285,57 +378,53 @@ namespace SentimentAnalysisApp
             this.hiddenSize = hiddenSize;
             this.outputSize = outputSize;
 
-            random = new Random(42); // Fixed seed for reproducibility
+            random = new Random(42);
 
-            // Initialise weights with small random values
+            // Initialize weights
             weightsInputHidden = new double[inputSize, hiddenSize];
             biasHidden = new double[hiddenSize];
             weightsHiddenOutput = new double[hiddenSize, outputSize];
             biasOutput = new double[outputSize];
 
-            // Initialise weights randomly between -0.5 and 0.5
+            // Xavier initialization for better training
+            double scaleInputHidden = Math.Sqrt(2.0 / (inputSize + hiddenSize));
+            double scaleHiddenOutput = Math.Sqrt(2.0 / (hiddenSize + outputSize));
+
             for (int i = 0; i < inputSize; i++)
                 for (int j = 0; j < hiddenSize; j++)
-                    weightsInputHidden[i, j] = random.NextDouble() - 0.5;
+                    weightsInputHidden[i, j] = (random.NextDouble() * 2 - 1) * scaleInputHidden;
 
             for (int i = 0; i < hiddenSize; i++)
                 for (int j = 0; j < outputSize; j++)
-                    weightsHiddenOutput[i, j] = random.NextDouble() - 0.5;
+                    weightsHiddenOutput[i, j] = (random.NextDouble() * 2 - 1) * scaleHiddenOutput;
 
-            // Initialise biases to small random values
             for (int i = 0; i < hiddenSize; i++)
-                biasHidden[i] = random.NextDouble() - 0.5;
+                biasHidden[i] = 0.01;
 
             for (int i = 0; i < outputSize; i++)
-                biasOutput[i] = random.NextDouble() - 0.5;
+                biasOutput[i] = 0.01;
         }
 
-        /// <summary>
-        /// Sigmoid activation function: maps any value to range (0, 1)
-        /// </summary>
         private double Sigmoid(double x)
         {
+            // Clip to prevent overflow
+            if (x > 20) return 1.0;
+            if (x < -20) return 0.0;
             return 1.0 / (1.0 + Math.Exp(-x));
         }
 
-        /// <summary>
-        /// Derivative of sigmoid function, used in backpropagation
-        /// </summary>
         private double SigmoidDerivative(double x)
         {
             return x * (1.0 - x);
         }
 
-        /// <summary>
-        /// Forward pass: propagate input through the network to get output
-        /// </summary>
         public double[] Forward(double[] input)
         {
             inputLayer = input;
             hiddenLayer = new double[hiddenSize];
             outputLayer = new double[outputSize];
 
-            // Calculate hidden layer activations
+            // Input to hidden
             for (int j = 0; j < hiddenSize; j++)
             {
                 double sum = biasHidden[j];
@@ -346,7 +435,7 @@ namespace SentimentAnalysisApp
                 hiddenLayer[j] = Sigmoid(sum);
             }
 
-            // Calculate output layer activations
+            // Hidden to output
             for (int k = 0; k < outputSize; k++)
             {
                 double sum = biasOutput[k];
@@ -361,11 +450,12 @@ namespace SentimentAnalysisApp
         }
 
         /// <summary>
-        /// Backward pass: update weights based on error using gradient descent
+        /// Backward pass that returns gradient for the input (embeddings)
+        /// This allows word embeddings to be updated based on classification error
         /// </summary>
-        public void Backward(double[] expected, double learningRate)
+        public double[] Backward(double[] expected, double learningRate)
         {
-            // Calculate output layer error and delta
+            // Output layer deltas
             double[] outputDelta = new double[outputSize];
             for (int k = 0; k < outputSize; k++)
             {
@@ -373,7 +463,7 @@ namespace SentimentAnalysisApp
                 outputDelta[k] = error * SigmoidDerivative(outputLayer[k]);
             }
 
-            // Calculate hidden layer error and delta
+            // Hidden layer deltas
             double[] hiddenDelta = new double[hiddenSize];
             for (int j = 0; j < hiddenSize; j++)
             {
@@ -385,7 +475,19 @@ namespace SentimentAnalysisApp
                 hiddenDelta[j] = error * SigmoidDerivative(hiddenLayer[j]);
             }
 
-            // Update weights and biases for hidden->output layer
+            // Calculate gradient for input (this will update word embeddings!)
+            double[] inputGradient = new double[inputSize];
+            for (int i = 0; i < inputSize; i++)
+            {
+                double gradient = 0;
+                for (int j = 0; j < hiddenSize; j++)
+                {
+                    gradient += hiddenDelta[j] * weightsInputHidden[i, j];
+                }
+                inputGradient[i] = gradient;
+            }
+
+            // Update hidden to output weights
             for (int j = 0; j < hiddenSize; j++)
             {
                 for (int k = 0; k < outputSize; k++)
@@ -398,7 +500,7 @@ namespace SentimentAnalysisApp
                 biasOutput[k] += learningRate * outputDelta[k];
             }
 
-            // Update weights and biases for input->hidden layer
+            // Update input to hidden weights
             for (int i = 0; i < inputSize; i++)
             {
                 for (int j = 0; j < hiddenSize; j++)
@@ -410,6 +512,8 @@ namespace SentimentAnalysisApp
             {
                 biasHidden[j] += learningRate * hiddenDelta[j];
             }
+
+            return inputGradient; // Return gradient to update word embeddings
         }
     }
 }
