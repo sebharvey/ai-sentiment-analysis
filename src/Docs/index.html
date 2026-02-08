@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentiment Analysis Neural Network — Visual Explorer</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0b0f;--surface:#12131a;--surface2:#1a1c26;--surface3:#22242f;
+  --border:#2a2d3a;--text:#e4e6ef;--text-dim:#8b8fa3;--text-muted:#5c5f73;
+  --accent:#6366f1;--accent2:#818cf8;--accent-glow:rgba(99,102,241,.15);
+  --positive:#22c55e;--positive-bg:rgba(34,197,94,.08);--positive-glow:rgba(34,197,94,.25);
+  --negative:#ef4444;--negative-bg:rgba(239,68,68,.08);--negative-glow:rgba(239,68,68,.25);
+  --neutral:#f59e0b;--neutral-bg:rgba(245,158,11,.08);--neutral-glow:rgba(245,158,11,.25);
+  --radius:12px;--radius-sm:8px;--radius-lg:16px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(99,102,241,.08),transparent),radial-gradient(ellipse 60% 40% at 80% 100%,rgba(34,197,94,.04),transparent);pointer-events:none;z-index:0}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(–bg)}
+::-webkit-scrollbar-thumb{background:var(–border);border-radius:3px}
+
+/* Layout */
+.container{max-width:1100px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+header{padding:60px 0 40px;text-align:center}
+header h1{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;letter-spacing:-.03em;background:linear-gradient(135deg,#e4e6ef 0%,#818cf8 50%,#6366f1 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
+header p{color:var(–text-dim);font-size:.95rem;max-width:600px;margin:0 auto;font-weight:300}
+.badge{display:inline-block;font-family:‘DM Mono’,monospace;font-size:.7rem;padding:4px 10px;border:1px solid var(–border);border-radius:20px;color:var(–text-muted);margin-bottom:16px;letter-spacing:.05em;text-transform:uppercase}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;background:var(–surface);border-radius:var(–radius);padding:4px;margin:0 auto 40px;max-width:700px;border:1px solid var(–border)}
+.tab{flex:1;padding:12px 16px;border:none;background:transparent;color:var(–text-dim);font-family:‘Sora’,sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;border-radius:var(–radius-sm);transition:all .25s ease;letter-spacing:.01em}
+.tab:hover{color:var(–text);background:var(–surface2)}
+.tab.active{background:var(–accent);color:#fff;box-shadow:0 2px 12px rgba(99,102,241,.3)}
+
+/* Sections */
+.section{display:none;animation:fadeUp .4s ease}
+.section.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* Cards */
+.card{background:var(–surface);border:1px solid var(–border);border-radius:var(–radius-lg);padding:28px;margin-bottom:24px;position:relative;overflow:hidden}
+.card::before{content:’’;position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(99,102,241,.3),transparent)}
+.card-title{font-size:1rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.card-title .step-num{font-family:‘DM Mono’,monospace;font-size:.7rem;background:var(–accent);color:#fff;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.card-sub{color:var(–text-dim);font-size:.82rem;margin-bottom:20px;font-weight:300}
+
+/* Input area */
+.input-group{display:flex;gap:10px;margin-bottom:24px}
+.input-group input{flex:1;padding:14px 18px;background:var(–surface2);border:1px solid var(–border);border-radius:var(–radius);color:var(–text);font-family:‘Sora’,sans-serif;font-size:.9rem;outline:none;transition:border-color .2s}
+.input-group input:focus{border-color:var(–accent)}
+.input-group input::placeholder{color:var(–text-muted)}
+.btn{padding:14px 28px;background:var(–accent);border:none;border-radius:var(–radius);color:#fff;font-family:‘Sora’,sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn:hover{background:var(–accent2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,102,241,.3)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-sm{padding:8px 16px;font-size:.78rem}
+
+/* Tokens */
+.token-row{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.token{font-family:‘DM Mono’,monospace;font-size:.82rem;padding:6px 14px;background:var(–surface2);border:1px solid var(–border);border-radius:6px;color:var(–accent2);position:relative;opacity:0;animation:tokenPop .3s forwards}
+.token.unknown{border-color:var(–neutral);color:var(–neutral);border-style:dashed}
+@keyframes tokenPop{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+
+/* Embedding vis */
+.embedding-grid{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;margin:16px 0}
+.emb-label{font-family:‘DM Mono’,monospace;font-size:.75rem;color:var(–text-dim);text-align:right;padding-top:4px;min-width:80px}
+.emb-bars{display:flex;gap:2px;align-items:center;height:28px}
+.emb-bar{width:16px;border-radius:3px;transition:height .5s cubic-bezier(.34,1.56,.64,1),background .5s;position:relative}
+
+/* Network vis */
+.network-canvas{width:100%;height:360px;position:relative;margin:20px 0}
+.network-canvas canvas{width:100%;height:100%;display:block}
+
+/* Progress */
+.epoch-bar-wrap{background:var(–surface2);border-radius:4px;height:8px;overflow:hidden;margin:12px 0}
+.epoch-bar{height:100%;background:linear-gradient(90deg,var(–accent),var(–positive));border-radius:4px;transition:width .3s;width:0}
+.epoch-info{display:flex;justify-content:between;gap:16px;font-family:‘DM Mono’,monospace;font-size:.75rem;color:var(–text-dim);margin-top:6px}
+.epoch-info span{flex:1}
+.epoch-info span:last-child{text-align:right}
+
+/* Scores */
+.scores{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.score-card{text-align:center;padding:20px 12px;border-radius:var(–radius);border:1px solid var(–border);background:var(–surface2);transition:all .5s}
+.score-card.winner{transform:scale(1.04)}
+.score-card.pos{border-color:var(–positive);background:var(–positive-bg)}
+.score-card.pos.winner{box-shadow:0 0 24px var(–positive-glow)}
+.score-card.neg{border-color:var(–negative);background:var(–negative-bg)}
+.score-card.neg.winner{box-shadow:0 0 24px var(–negative-glow)}
+.score-card.neu{border-color:var(–neutral);background:var(–neutral-bg)}
+.score-card.neu.winner{box-shadow:0 0 24px var(–neutral-glow)}
+.score-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:6px}
+.score-val{font-family:‘DM Mono’,monospace;font-size:1.8rem;font-weight:500}
+.score-pct{font-family:‘DM Mono’,monospace;font-size:.75rem;color:var(–text-dim);margin-top:4px}
+.pos .score-label,.pos .score-val{color:var(–positive)}
+.neg .score-label,.neg .score-val{color:var(–negative)}
+.neu .score-label,.neu .score-val{color:var(–neutral)}
+
+/* Result banner */
+.result-banner{text-align:center;padding:24px;border-radius:var(–radius-lg);margin:20px 0;opacity:0;transform:scale(.95);transition:all .5s}
+.result-banner.show{opacity:1;transform:scale(1)}
+.result-banner .emoji{font-size:2.4rem;margin-bottom:8px}
+.result-banner .label{font-size:1.3rem;font-weight:700}
+.result-banner .conf{font-family:‘DM Mono’,monospace;font-size:.85rem;margin-top:4px}
+.result-banner.pos-result{background:var(–positive-bg);border:1px solid var(–positive);color:var(–positive)}
+.result-banner.neg-result{background:var(–negative-bg);border:1px solid var(–negative);color:var(–negative)}
+.result-banner.neu-result{background:var(–neutral-bg);border:1px solid var(–neutral);color:var(–neutral)}
+
+/* Training vis */
+.training-words{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0}
+.tw{font-family:‘DM Mono’,monospace;font-size:.72rem;padding:4px 10px;border-radius:4px;transition:all .6s}
+
+/* Architecture diagram */
+.arch-diagram{display:flex;align-items:center;justify-content:center;gap:0;margin:20px 0;padding:20px 0;position:relative;overflow-x:auto}
+.arch-layer{display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;z-index:2}
+.arch-layer-title{font-family:‘DM Mono’,monospace;font-size:.68rem;color:var(–text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.neuron{width:32px;height:32px;border-radius:50%;border:2px solid var(–border);display:flex;align-items:center;justify-content:center;font-family:‘DM Mono’,monospace;font-size:.6rem;color:var(–text-dim);transition:all .4s;position:relative;background:var(–surface)}
+.neuron.active{border-color:var(–accent);box-shadow:0 0 12px var(–accent-glow);color:var(–accent2);background:rgba(99,102,241,.08)}
+.neuron.pos-out{border-color:var(–positive);color:var(–positive);background:var(–positive-bg)}
+.neuron.neg-out{border-color:var(–negative);color:var(–negative);background:var(–negative-bg)}
+.neuron.neu-out{border-color:var(–neutral);color:var(–neutral);background:var(–neutral-bg)}
+.arch-connections{width:60px;flex-shrink:0}
+
+/* Flow arrow */
+.flow-arrow{display:flex;align-items:center;justify-content:center;padding:0 12px;color:var(–text-muted);font-size:1.2rem}
+
+/* Animated dots for connections */
+.conn-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1}
+
+/* Example sentences */
+.examples{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.example-btn{font-size:.78rem;padding:6px 14px;background:var(–surface2);border:1px solid var(–border);border-radius:20px;color:var(–text-dim);cursor:pointer;font-family:‘Sora’,sans-serif;transition:all .2s}
+.example-btn:hover{border-color:var(–accent);color:var(–accent2);background:var(–accent-glow)}
+
+/* Grid helper */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:700px){.grid-2{grid-template-columns:1fr}.scores{grid-template-columns:1fr}}
+
+/* Pulse animation */
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+.pulsing{animation:pulse 1.5s ease infinite}
+
+/* Data flow indicator */
+.flow-indicator{display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(–surface2);border-radius:var(–radius-sm);margin:12px 0;font-size:.8rem;color:var(–text-dim);border-left:3px solid var(–accent)}
+.flow-indicator .dot{width:8px;height:8px;border-radius:50%;background:var(–accent);animation:pulse 1s ease infinite}
+
+/* Code block */
+.code-block{font-family:‘DM Mono’,monospace;font-size:.75rem;background:var(–surface2);border:1px solid var(–border);border-radius:var(–radius-sm);padding:14px 18px;overflow-x:auto;color:var(–text-dim);line-height:1.7;margin:12px 0}
+.code-block .kw{color:var(–accent2)}
+.code-block .str{color:var(–positive)}
+.code-block .num{color:var(–neutral)}
+.code-block .cmt{color:var(–text-muted);font-style:italic}
+
+/* Vector average animation */
+.vec-merge{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:16px 0}
+.vec-chip{font-family:‘DM Mono’,monospace;font-size:.72rem;padding:6px 12px;border-radius:6px;background:var(–surface2);border:1px solid var(–border);color:var(–accent2);transition:all .5s}
+.vec-chip.merging{transform:translateY(-4px);box-shadow:0 4px 12px var(–accent-glow)}
+.vec-arrow{color:var(–text-muted);font-size:1rem}
+.vec-result{font-family:‘DM Mono’,monospace;font-size:.82rem;padding:8px 16px;border-radius:6px;background:var(–accent-glow);border:1px solid var(–accent);color:var(–accent2)}
+
+footer{text-align:center;padding:40px 0;color:var(–text-muted);font-size:.75rem}
+footer a{color:var(–accent2);text-decoration:none}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+<header>
+  <div class="badge">Interactive Visualisation</div>
+  <h1>How the Neural Network Learns Sentiment</h1>
+  <p>A visual walkthrough of how a neural network built from scratch in C# learns to understand whether text is positive, negative, or neutral.</p>
+</header>
+
+<div class="tabs" role="tablist">
+  <button class="tab active" data-tab="overview" role="tab">Architecture</button>
+  <button class="tab" data-tab="training" role="tab">Training</button>
+  <button class="tab" data-tab="inference" role="tab">Try It Live</button>
+  <button class="tab" data-tab="embeddings" role="tab">Word Embeddings</button>
+</div>
+
+<!-- ======== OVERVIEW ======== -->
+
+<div class="section active" id="sec-overview">
+  <div class="card">
+    <div class="card-title"><span class="step-num">1</span>The Big Picture</div>
+    <div class="card-sub">The network takes raw text, converts words into numbers, and learns which patterns mean positive, negative, or neutral.</div>
+
+```
+<div class="flow-indicator"><span class="dot"></span> No dictionaries — the network learns word meanings from training data alone</div>
+
+<div id="arch-vis" style="margin:24px 0">
+  <div class="arch-diagram" id="archDiagram">
+    <div class="arch-layer">
+      <div class="arch-layer-title">Input Text</div>
+      <div class="neuron" style="width:auto;border-radius:8px;padding:4px 12px;font-size:.7rem" id="arch-input">"I love this!"</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">Tokenise</div>
+      <div class="neuron" style="width:auto;border-radius:8px;padding:4px 10px;font-size:.65rem">i</div>
+      <div class="neuron" style="width:auto;border-radius:8px;padding:4px 10px;font-size:.65rem">love</div>
+      <div class="neuron" style="width:auto;border-radius:8px;padding:4px 10px;font-size:.65rem">this</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">Embeddings (16D)</div>
+      <div class="neuron active" id="an0"></div>
+      <div class="neuron active" id="an1"></div>
+      <div class="neuron active" id="an2"></div>
+      <div class="neuron active" id="an3"></div>
+      <div class="neuron active" id="an4"></div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">Average</div>
+      <div class="neuron active" style="width:48px;height:48px;font-size:.6rem;border-color:var(--accent)">Σ/n</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">Hidden (12)</div>
+      <div class="neuron" id="hn0"></div>
+      <div class="neuron" id="hn1"></div>
+      <div class="neuron" id="hn2"></div>
+      <div class="neuron" id="hn3"></div>
+      <div class="neuron" id="hn4"></div>
+      <div class="neuron" id="hn5"></div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">Output (3)</div>
+      <div class="neuron pos-out" id="on0">+</div>
+      <div class="neuron neg-out" id="on1">−</div>
+      <div class="neuron neu-out" id="on2">~</div>
+    </div>
+  </div>
+</div>
+
+<div class="code-block"><span class="cmt">// Network dimensions from the C# code</span>
+```
+
+<span class="kw">const int</span> EMBEDDING_SIZE = <span class="num">16</span>;  <span class="cmt">// each word → 16 numbers</span>
+<span class="kw">const int</span> HIDDEN_SIZE   = <span class="num">12</span>;  <span class="cmt">// 12 pattern-detecting neurons</span>
+<span class="kw">const int</span> OUTPUT_SIZE   = <span class="num">3</span>;   <span class="cmt">// positive, negative, neutral</span></div>
+
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><span class="step-num">2</span>Word Embeddings</div>
+      <div class="card-sub">Each word is a vector of 16 numbers — initially random, then learned.</div>
+      <p style="font-size:.82rem;color:var(--text-dim)">Instead of a dictionary saying "excellent = +1.0", the network starts with random numbers for every word and adjusts them through training. Words used in positive reviews drift towards similar positions in 16-dimensional space.</p>
+      <div class="code-block"><span class="cmt">// 487 words × 16 dimensions = 7,792 learnable values</span>
+wordEmbeddings = <span class="kw">new double</span>[<span class="num">487</span>, <span class="num">16</span>];</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="step-num">3</span>~8,000 Parameters</div>
+      <div class="card-sub">The entire network is tiny by modern standards.</div>
+      <p style="font-size:.82rem;color:var(--text-dim)">Word embeddings: <strong>7,792</strong> values. Input→Hidden weights: <strong>204</strong>. Hidden→Output weights: <strong>39</strong>. Total: under 70KB. For comparison, BERT has 110 million parameters.</p>
+      <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+        <span class="vec-chip">Embeddings: 7,792</span>
+        <span class="vec-chip">Weights: 243</span>
+        <span class="vec-chip">Total: ~8,035</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== TRAINING ======== -->
+
+<div class="section" id="sec-training">
+  <div class="card">
+    <div class="card-title"><span class="step-num">1</span>Training Simulation</div>
+    <div class="card-sub">Watch the network learn from 500+ labelled examples over 2,000 epochs. Each epoch processes every training example once.</div>
+
+```
+<button class="btn" id="trainBtn" onclick="startTraining()">▶ Start Training</button>
+<button class="btn btn-sm" id="resetTrainBtn" style="background:var(--surface2);border:1px solid var(--border);margin-left:8px;display:none" onclick="resetTraining()">Reset</button>
+
+<div style="margin-top:20px">
+  <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-dim)">
+    <span>Epoch <span id="epochNum">0</span> / 2000</span>
+    <span>Error: <span id="epochError">—</span></span>
+  </div>
+  <div class="epoch-bar-wrap"><div class="epoch-bar" id="epochBar"></div></div>
+</div>
+
+<canvas id="errorChart" width="1000" height="200" style="width:100%;height:180px;margin-top:16px;border-radius:var(--radius-sm)"></canvas>
+```
+
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="step-num">2</span>What the Network Sees During Training</div>
+    <div class="card-sub">Sentences are shuffled each epoch. The gradient from each example nudges both the network weights and the word embeddings.</div>
+
+```
+<div id="trainingSample" style="min-height:80px">
+  <div class="flow-indicator"><span class="dot"></span> Press "Start Training" to watch examples flow through the network</div>
+</div>
+```
+
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="step-num">3</span>How Words Learn Their Meaning</div>
+    <div class="card-sub">Watch words drift from random positions to meaningful locations based on sentiment.</div>
+
+```
+<div id="wordDrift" class="training-words">
+  <span class="tw" style="background:var(--surface2);color:var(--text-muted)">excellent</span>
+  <span class="tw" style="background:var(--surface2);color:var(--text-muted)">love</span>
+  <span class="tw" style="background:var(--surface2);color:var(--text-muted)">brilliant</span>
+  <span class="tw" style="background:var(--surface2);color:var(--text-muted)">terrible</span>
+  <span class="tw" style="background:var(--surface2);color:var(--text-muted)">awful</span>
+  <span class="tw" style="background:var(--surface2);color:var(--text-muted)">hate</span>
+  <span class="tw" style="background:var(--surface2);color:var(--text-muted)">okay</span>
+  <span class="tw" style="background:var(--surface2);color:var(--text-muted)">average</span>
+  <span class="tw" style="background:var(--surface2);color:var(--text-muted)">fine</span>
+  <span class="tw" style="background:var(--surface2);color:var(--text-muted)">the</span>
+  <span class="tw" style="background:var(--surface2);color:var(--text-muted)">is</span>
+  <span class="tw" style="background:var(--surface2);color:var(--text-muted)">amazing</span>
+  <span class="tw" style="background:var(--surface2);color:var(--text-muted)">horrible</span>
+  <span class="tw" style="background:var(--surface2);color:var(--text-muted)">decent</span>
+</div>
+<div style="display:flex;gap:16px;font-size:.7rem;color:var(--text-muted);margin-top:8px;flex-wrap:wrap">
+  <span>🟢 Positive region</span>
+  <span>🔴 Negative region</span>
+  <span>🟡 Neutral region</span>
+  <span>⚪ Common words (near zero)</span>
+</div>
+```
+
+  </div>
+</div>
+
+<!-- ======== INFERENCE ======== -->
+
+<div class="section" id="sec-inference">
+  <div class="card">
+    <div class="card-title"><span class="step-num">1</span>Analyse Any Sentence</div>
+    <div class="card-sub">Type a sentence and watch it flow through every layer of the neural network in real time.</div>
+
+```
+<div class="input-group">
+  <input type="text" id="sentenceInput" placeholder="Type a sentence to analyse..." value="I absolutely love this product, it's amazing!">
+  <button class="btn" id="analyseBtn" onclick="runInference()">Analyse</button>
+</div>
+
+<div class="examples">
+  <button class="example-btn" onclick="setExample(this)">I love this product, it's amazing!</button>
+  <button class="example-btn" onclick="setExample(this)">This is terrible and I hate it</button>
+  <button class="example-btn" onclick="setExample(this)">It's okay, nothing special</button>
+  <button class="example-btn" onclick="setExample(this)">Absolutely brilliant quality</button>
+  <button class="example-btn" onclick="setExample(this)">Worst purchase ever</button>
+  <button class="example-btn" onclick="setExample(this)">Decent enough for the price</button>
+</div>
+```
+
+  </div>
+
+  <!-- Step 2: Tokenisation -->
+
+  <div class="card" id="step-tokenise" style="opacity:.3;transition:opacity .4s">
+    <div class="card-title"><span class="step-num">2</span>Tokenisation</div>
+    <div class="card-sub">Split text into lowercase words, removing punctuation.</div>
+    <div class="code-block"><span class="kw">sentence</span>.ToLower().Split([<span class="str">' '</span>, <span class="str">','</span>, <span class="str">'.'</span>, <span class="str">'!'</span>, <span class="str">'?'</span>])</div>
+    <div class="token-row" id="tokenRow"></div>
+  </div>
+
+  <!-- Step 3: Embeddings -->
+
+  <div class="card" id="step-embed" style="opacity:.3;transition:opacity .4s">
+    <div class="card-title"><span class="step-num">3</span>Look Up Word Embeddings</div>
+    <div class="card-sub">Each token maps to a 16-dimensional vector. Unknown words use the &lt;UNK&gt; token.</div>
+    <div class="embedding-grid" id="embeddingGrid"></div>
+  </div>
+
+  <!-- Step 4: Average -->
+
+  <div class="card" id="step-average" style="opacity:.3;transition:opacity .4s">
+    <div class="card-title"><span class="step-num">4</span>Average Embeddings</div>
+    <div class="card-sub">All word vectors are averaged into a single 16D sentence vector (Continuous Bag of Words).</div>
+    <div class="vec-merge" id="vecMerge"></div>
+    <div class="emb-bars" id="avgBars" style="height:40px;justify-content:center;gap:3px;margin-top:12px"></div>
+  </div>
+
+  <!-- Step 5: Forward Pass -->
+
+  <div class="card" id="step-forward" style="opacity:.3;transition:opacity .4s">
+    <div class="card-title"><span class="step-num">5</span>Forward Pass Through Network</div>
+    <div class="card-sub">The sentence vector passes through the hidden layer (12 neurons, sigmoid activation) then to the output layer (3 neurons).</div>
+
+```
+<div class="arch-diagram" id="infArchDiagram" style="flex-wrap:wrap">
+  <div class="arch-layer">
+    <div class="arch-layer-title">Input (16D)</div>
+    <div id="inf-input-neurons" style="display:flex;flex-direction:column;gap:4px"></div>
+  </div>
+  <div class="flow-arrow" id="fa1" style="opacity:.2">→</div>
+  <div class="arch-layer">
+    <div class="arch-layer-title">Hidden (12)</div>
+    <div id="inf-hidden-neurons" style="display:flex;flex-direction:column;gap:4px"></div>
+  </div>
+  <div class="flow-arrow" id="fa2" style="opacity:.2">→</div>
+  <div class="arch-layer">
+    <div class="arch-layer-title">Output (3)</div>
+    <div id="inf-output-neurons" style="display:flex;flex-direction:column;gap:4px"></div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- Step 6: Result -->
+
+  <div class="card" id="step-result" style="opacity:.3;transition:opacity .4s">
+    <div class="card-title"><span class="step-num">6</span>Classification Result</div>
+    <div class="card-sub">The highest scoring output neuron determines the sentiment.</div>
+
+```
+<div class="scores" id="scoreCards">
+  <div class="score-card pos"><div class="score-label">Positive</div><div class="score-val" id="posScore">—</div><div class="score-pct" id="posPct"></div></div>
+  <div class="score-card neg"><div class="score-label">Negative</div><div class="score-val" id="negScore">—</div><div class="score-pct" id="negPct"></div></div>
+  <div class="score-card neu"><div class="score-label">Neutral</div><div class="score-val" id="neuScore">—</div><div class="score-pct" id="neuPct"></div></div>
+</div>
+
+<div class="result-banner" id="resultBanner">
+  <div class="emoji" id="resultEmoji"></div>
+  <div class="label" id="resultLabel"></div>
+  <div class="conf" id="resultConf"></div>
+</div>
+```
+
+  </div>
+</div>
+
+<!-- ======== EMBEDDINGS ======== -->
+
+<div class="section" id="sec-embeddings">
+  <div class="card">
+    <div class="card-title"><span class="step-num">1</span>Explore Learned Word Embeddings</div>
+    <div class="card-sub">After training, words with similar sentiment end up with similar embedding vectors. Click a word to see its 16-dimensional representation.</div>
+
+```
+<div style="margin-bottom:16px">
+  <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:8px">Positive words</div>
+  <div class="examples" id="posWords"></div>
+</div>
+<div style="margin-bottom:16px">
+  <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:8px">Negative words</div>
+  <div class="examples" id="negWords"></div>
+</div>
+<div style="margin-bottom:16px">
+  <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:8px">Neutral words</div>
+  <div class="examples" id="neuWords"></div>
+</div>
+<div>
+  <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:8px">Common words (appear in all sentiments → near zero)</div>
+  <div class="examples" id="comWords"></div>
+</div>
+```
+
+  </div>
+
+  <div class="card" id="embDetailCard" style="display:none">
+    <div class="card-title">Embedding for "<span id="embWordTitle"></span>"</div>
+    <div class="card-sub">16-dimensional vector — bar height and colour show the learned value for each dimension.</div>
+    <div class="emb-bars" id="embDetailBars" style="height:120px;justify-content:center;gap:4px;margin:20px 0"></div>
+    <div style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--text-dim);word-break:break-all" id="embDetailNums"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="step-num">2</span>Word Similarity Map</div>
+    <div class="card-sub">A 2D projection of the 16D embedding space. Similar words cluster together. This shows how the network groups words by sentiment without being told to.</div>
+    <canvas id="similarityCanvas" width="800" height="500" style="width:100%;height:400px;border-radius:var(--radius-sm);background:var(--surface2);margin-top:12px"></canvas>
+  </div>
+</div>
+
+<footer>
+  Built to accompany the <a href="#">Sentiment Analysis Neural Network</a> — genuine ML in C# with no external libraries.
+</footer>
+</div>
+
+<script>
+// ============================================================
+// SIMULATED NEURAL NETWORK (mirrors the C# implementation)
+// ============================================================
+
+// Vocabulary with pre-computed "trained" embeddings (simulated)
+const EMBEDDING_SIZE = 16;
+const HIDDEN_SIZE = 12;
+const OUTPUT_SIZE = 3;
+
+// Seed-based pseudo random for reproducibility
+function seededRandom(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 16807 + 0) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+const rng = seededRandom(42);
+
+// Word categories for generating realistic embeddings
+const wordSentiment = {
+  // Positive words
+  'love':1,'amazing':1,'brilliant':1,'excellent':1,'fantastic':1,'wonderful':1,
+  'superb':1,'outstanding':1,'perfect':1,'incredible':1,'awesome':1,'beautiful':1,
+  'delightful':1,'remarkable':1,'exceptional':1,'stunning':1,'magnificent':1,
+  'phenomenal':1,'splendid':1,'terrific':1,'gorgeous':1,'impressive':1,'lovely':1,
+  'fabulous':1,'great':1,'happy':1,'pleased':1,'satisfied':1,'delighted':1,
+  'adore':1,'recommend':1,'best':1,'favourite':1,'joy':1,'premium':1,
+  // Negative words
+  'hate':-1,'terrible':-1,'awful':-1,'horrible':-1,'worst':-1,'disappointing':-1,
+  'dreadful':-1,'frustrating':-1,'useless':-1,'poor':-1,'bad':-1,'rubbish':-1,
+  'pathetic':-1,'waste':-1,'broken':-1,'defective':-1,'disgusting':-1,
+  'appalling':-1,'horrendous':-1,'atrocious':-1,'abysmal':-1,'unacceptable':-1,
+  'regret':-1,'disappointed':-1,'unhappy':-1,'rude':-1,'shoddy':-1,
+  // Neutral words
+  'okay':0,'average':0,'fine':0,'decent':0,'acceptable':0,'adequate':0,
+  'mediocre':0,'standard':0,'ordinary':0,'reasonable':0,'moderate':0,
+  'passable':0,'satisfactory':0,'typical':0,'functional':0,'basic':0,
+  'unremarkable':0,'common':0,
+  // Common words (appear everywhere)
+  'the':null,'is':null,'it':null,'a':null,'and':null,'this':null,'i':null,
+  'my':null,'was':null,'very':null,'not':null,'but':null,'with':null,
+  'for':null,'so':null,'that':null,'have':null,'has':null,'had':null,
+  'product':null,'service':null,'quality':null,'price':null,'food':null,
+};
+
+// Generate realistic embedding for a word
+function generateEmbedding(word, trained = true) {
+  const r = seededRandom(hashStr(word));
+  const emb = [];
+  const sent = wordSentiment[word];
+
+  for (let i = 0; i < EMBEDDING_SIZE; i++) {
+    let val = (r() * 2 - 1) * 0.1; // small random base
+    if (trained) {
+      if (sent === 1) val += (0.5 + r() * 0.4) * (i % 2 === 0 ? 1 : 0.6);
+      else if (sent === -1) val -= (0.5 + r() * 0.4) * (i % 2 === 0 ? 1 : 0.6);
+      else if (sent === 0) val += (r() * 0.3 - 0.15);
+      // null = common word, stays near 0
+    }
+    emb.push(Math.max(-1, Math.min(1, val)));
+  }
+  return emb;
+}
+
+function generateRandomEmbedding(word) {
+  const r = seededRandom(hashStr(word));
+  return Array.from({length: EMBEDDING_SIZE}, () => (r() * 2 - 1) * 0.3);
+}
+
+function hashStr(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+  return Math.abs(h) + 1;
+}
+
+// Tokenise (matches C# implementation)
+function tokenize(sentence) {
+  return sentence.toLowerCase().split(/[\s,\.!\?;:'"]+/).filter(w => w.length > 0);
+}
+
+// Sigmoid
+function sigmoid(x) {
+  if (x > 20) return 1;
+  if (x < -20) return 0;
+  return 1 / (1 + Math.exp(-x));
+}
+
+// Simulated trained weights (generated for demo)
+const weightsIH = [];
+const biasH = [];
+const weightsHO = [];
+const biasO = [];
+
+(function initWeights() {
+  const r = seededRandom(123);
+  for (let i = 0; i < EMBEDDING_SIZE; i++) {
+    weightsIH[i] = [];
+    for (let j = 0; j < HIDDEN_SIZE; j++) {
+      weightsIH[i][j] = (r() * 2 - 1) * 0.5;
+    }
+  }
+  // Bias hidden layer to make outputs reasonable
+  for (let j = 0; j < HIDDEN_SIZE; j++) biasH[j] = (r() * 0.4 - 0.2);
+
+  for (let j = 0; j < HIDDEN_SIZE; j++) {
+    weightsHO[j] = [];
+    for (let k = 0; k < OUTPUT_SIZE; k++) {
+      weightsHO[j][k] = (r() * 2 - 1) * 0.6;
+    }
+  }
+  // Bias output to make it respond to sentiment direction
+  // Positive neuron biased by positive embeddings etc
+  biasO[0] = 0.3; biasO[1] = -0.3; biasO[2] = 0.0;
+
+  // Manually tweak weights so positive input → positive output
+  for (let j = 0; j < HIDDEN_SIZE; j++) {
+    // First 4 hidden neurons respond to positive patterns
+    if (j < 4) {
+      for (let i = 0; i < EMBEDDING_SIZE; i++) weightsIH[i][j] = (i % 2 === 0) ? 1.2 : 0.4;
+      weightsHO[j][0] = 1.5;  // positive output
+      weightsHO[j][1] = -1.2; // suppress negative
+      weightsHO[j][2] = -0.3;
+    }
+    // Next 4 respond to negative patterns
+    else if (j < 8) {
+      for (let i = 0; i < EMBEDDING_SIZE; i++) weightsIH[i][j] = (i % 2 === 0) ? -1.2 : -0.4;
+      weightsHO[j][0] = -1.2;
+      weightsHO[j][1] = 1.5;
+      weightsHO[j][2] = -0.3;
+    }
+    // Last 4 respond weakly → neutral
+    else {
+      for (let i = 0; i < EMBEDDING_SIZE; i++) weightsIH[i][j] = (r() * 0.4 - 0.2);
+      weightsHO[j][0] = -0.5;
+      weightsHO[j][1] = -0.5;
+      weightsHO[j][2] = 1.0;
+    }
+  }
+})();
+
+// Forward pass
+function forwardPass(inputVec) {
+  const hidden = [];
+  for (let j = 0; j < HIDDEN_SIZE; j++) {
+    let sum = biasH[j];
+    for (let i = 0; i < EMBEDDING_SIZE; i++) sum += inputVec[i] * weightsIH[i][j];
+    hidden[j] = sigmoid(sum);
+  }
+
+  const output = [];
+  for (let k = 0; k < OUTPUT_SIZE; k++) {
+    let sum = biasO[k];
+    for (let j = 0; j < HIDDEN_SIZE; j++) sum += hidden[j] * weightsHO[j][k];
+    output[k] = sigmoid(sum);
+  }
+
+  return { hidden, output };
+}
+
+// Full analysis
+function analyseSentence(sentence) {
+  const tokens = tokenize(sentence);
+  const embeddings = tokens.map(w => {
+    const known = (w in wordSentiment);
+    return { word: w, known, embedding: generateEmbedding(w) };
+  });
+
+  // Average
+  const avg = new Array(EMBEDDING_SIZE).fill(0);
+  embeddings.forEach(e => e.embedding.forEach((v, i) => avg[i] += v));
+  if (embeddings.length > 0) avg.forEach((_, i) => avg[i] /= embeddings.length);
+
+  const { hidden, output } = forwardPass(avg);
+
+  // Normalise outputs to sum ~1
+  const total = output.reduce((a, b) => a + b, 0);
+  const norm = output.map(v => v / total);
+
+  const maxIdx = norm.indexOf(Math.max(...norm));
+  const labels = ['Positive', 'Negative', 'Neutral'];
+
+  return { tokens, embeddings, avg, hidden, output: norm, label: labels[maxIdx], confidence: norm[maxIdx] };
+}
+
+
+// ============================================================
+// TAB NAVIGATION
+// ============================================================
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('sec-' + tab.dataset.tab).classList.add('active');
+
+    if (tab.dataset.tab === 'embeddings') initEmbeddingsTab();
+  });
+});
+
+// ============================================================
+// ARCHITECTURE TAB — Animated neurons
+// ============================================================
+(function animateArch() {
+  const hidden = document.querySelectorAll('[id^="hn"]');
+  let step = 0;
+  setInterval(() => {
+    hidden.forEach((n, i) => {
+      n.classList.toggle('active', (i + step) % 3 === 0);
+    });
+    step++;
+  }, 800);
+})();
+
+
+// ============================================================
+// TRAINING TAB
+// ============================================================
+let trainingRunning = false;
+let trainingFrame = 0;
+
+const sampleTraining = [
+  { sent: 'positive', text: 'I love this product it is amazing' },
+  { sent: 'negative', text: 'Terrible quality waste of money' },
+  { sent: 'neutral', text: 'It works fine nothing special' },
+  { sent: 'positive', text: 'Absolutely brilliant best purchase ever' },
+  { sent: 'negative', text: 'Disappointing and frustrating experience' },
+  { sent: 'positive', text: 'Outstanding superb quality' },
+  { sent: 'neutral', text: 'Average product acceptable quality' },
+  { sent: 'negative', text: 'Worst thing I have ever bought' },
+  { sent: 'positive', text: 'Wonderful experience very happy with it' },
+  { sent: 'neutral', text: 'Decent enough for the price' },
+  { sent: 'negative', text: 'Horrible customer service rude' },
+  { sent: 'positive', text: 'Perfect exactly what I wanted' },
+];
+
+const errorHistory = [];
+const wordColors = {
+  'excellent':{target:'positive'},'love':{target:'positive'},'brilliant':{target:'positive'},
+  'amazing':{target:'positive'},'terrible':{target:'negative'},'awful':{target:'negative'},
+  'hate':{target:'negative'},'horrible':{target:'negative'},'okay':{target:'neutral'},
+  'average':{target:'neutral'},'fine':{target:'neutral'},'decent':{target:'neutral'},
+  'the':{target:'common'},'is':{target:'common'},
+};
+
+function startTraining() {
+  if (trainingRunning) return;
+  trainingRunning = true;
+  document.getElementById('trainBtn').disabled = true;
+  document.getElementById('resetTrainBtn').style.display = 'inline-block';
+  errorHistory.length = 0;
+  trainingFrame = 0;
+  animateTraining();
+}
+
+function resetTraining() {
+  trainingRunning = false;
+  trainingFrame = 0;
+  errorHistory.length = 0;
+  document.getElementById('trainBtn').disabled = false;
+  document.getElementById('resetTrainBtn').style.display = 'none';
+  document.getElementById('epochNum').textContent = '0';
+  document.getElementById('epochError').textContent = '—';
+  document.getElementById('epochBar').style.width = '0%';
+  document.getElementById('trainingSample').innerHTML = '<div class="flow-indicator"><span class="dot"></span> Press "Start Training" to watch examples flow through the network</div>';
+  drawErrorChart();
+  resetWordDrift();
+}
+
+function animateTraining() {
+  if (!trainingRunning || trainingFrame >= 100) {
+    trainingRunning = false;
+    document.getElementById('trainBtn').disabled = false;
+    return;
+  }
+
+  const epoch = Math.round((trainingFrame / 100) * 2000);
+  // Simulate error decay: starts ~45, decays to ~3
+  const error = 3 + 42 * Math.exp(-trainingFrame * 0.05);
+  errorHistory.push({ epoch, error });
+
+  document.getElementById('epochNum').textContent = epoch;
+  document.getElementById('epochError').textContent = error.toFixed(2);
+  document.getElementById('epochBar').style.width = (trainingFrame) + '%';
+
+  // Show a sample
+  const sample = sampleTraining[trainingFrame % sampleTraining.length];
+  const sentColor = sample.sent === 'positive' ? 'var(--positive)' : sample.sent === 'negative' ? 'var(--negative)' : 'var(--neutral)';
+  document.getElementById('trainingSample').innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <span style="font-family:'DM Mono',monospace;font-size:.72rem;padding:4px 10px;border-radius:4px;background:${sample.sent === 'positive' ? 'var(--positive-bg)' : sample.sent === 'negative' ? 'var(--negative-bg)' : 'var(--neutral-bg)'};color:${sentColor};border:1px solid ${sentColor}">${sample.sent}</span>
+      <span style="font-size:.85rem;color:var(--text)">${sample.text}</span>
+    </div>
+    <div class="flow-indicator" style="margin-top:10px"><span class="dot"></span> Forward pass → calculate error → backpropagate → update weights + embeddings</div>
+  `;
+
+  // Animate word drift
+  updateWordDrift(trainingFrame / 100);
+
+  drawErrorChart();
+
+  trainingFrame++;
+  setTimeout(animateTraining, 80);
+}
+
+function updateWordDrift(progress) {
+  const words = document.querySelectorAll('#wordDrift .tw');
+  const targets = ['excellent','love','brilliant','terrible','awful','hate','okay','average','fine','the','is','amazing','horrible','decent'];
+  const cats = ['positive','positive','positive','negative','negative','negative','neutral','neutral','neutral','common','common','positive','negative','neutral'];
+
+  words.forEach((el, i) => {
+    const cat = cats[i];
+    const p = Math.min(1, progress * 1.5); // ease in
+    if (cat === 'positive') {
+      const g = Math.round(180 + 60 * p);
+      el.style.background = `rgba(34,${g},94,${0.05 + p * 0.15})`;
+      el.style.color = `rgba(34,${g},94,${0.4 + p * 0.6})`;
+      el.style.borderLeft = `2px solid rgba(34,${g},94,${p * 0.6})`;
+    } else if (cat === 'negative') {
+      const r = Math.round(200 + 39 * p);
+      el.style.background = `rgba(${r},68,68,${0.05 + p * 0.15})`;
+      el.style.color = `rgba(${r},68,68,${0.4 + p * 0.6})`;
+      el.style.borderLeft = `2px solid rgba(${r},68,68,${p * 0.6})`;
+    } else if (cat === 'neutral') {
+      el.style.background = `rgba(245,158,11,${0.05 + p * 0.12})`;
+      el.style.color = `rgba(245,158,11,${0.4 + p * 0.6})`;
+      el.style.borderLeft = `2px solid rgba(245,158,11,${p * 0.5})`;
+    } else {
+      el.style.background = `rgba(100,100,120,${0.05 + p * 0.05})`;
+      el.style.color = `rgba(140,140,160,${0.4 + p * 0.3})`;
+      el.style.borderLeft = `2px solid rgba(140,140,160,${p * 0.2})`;
+    }
+  });
+}
+
+function resetWordDrift() {
+  document.querySelectorAll('#wordDrift .tw').forEach(el => {
+    el.style.background = 'var(--surface2)';
+    el.style.color = 'var(--text-muted)';
+    el.style.borderLeft = 'none';
+  });
+}
+
+function drawErrorChart() {
+  const canvas = document.getElementById('errorChart');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#12131a';
+  ctx.beginPath();
+  ctx.roundRect(0, 0, W, H, 8);
+  ctx.fill();
+
+  // Grid
+  ctx.strokeStyle = 'rgba(42,45,58,.6)';
+  ctx.lineWidth = 1;
+  for (let y = 0; y < 5; y++) {
+    const py = 20 + (y / 4) * (H - 40);
+    ctx.beginPath(); ctx.moveTo(40, py); ctx.lineTo(W - 10, py); ctx.stroke();
+  }
+
+  // Labels
+  ctx.fillStyle = '#5c5f73';
+  ctx.font = '11px "DM Mono", monospace';
+  ctx.textAlign = 'right';
+  for (let y = 0; y < 5; y++) {
+    const val = 45 - (y / 4) * 42;
+    ctx.fillText(val.toFixed(0), 35, 24 + (y / 4) * (H - 40));
+  }
+
+  if (errorHistory.length < 2) return;
+
+  // Line
+  ctx.beginPath();
+  ctx.strokeStyle = '#6366f1';
+  ctx.lineWidth = 2.5;
+  ctx.lineJoin = 'round';
+
+  errorHistory.forEach((pt, i) => {
+    const x = 40 + (i / 100) * (W - 50);
+    const y = 20 + ((45 - pt.error) / 42) * (H - 40);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Glow
+  const last = errorHistory[errorHistory.length - 1];
+  const lx = 40 + ((errorHistory.length - 1) / 100) * (W - 50);
+  const ly = 20 + ((45 - last.error) / 42) * (H - 40);
+  ctx.beginPath();
+  ctx.arc(lx, ly, 5, 0, Math.PI * 2);
+  ctx.fillStyle = '#6366f1';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(lx, ly, 10, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(99,102,241,.2)';
+  ctx.fill();
+}
+
+drawErrorChart();
+
+
+// ============================================================
+// INFERENCE TAB
+// ============================================================
+function setExample(btn) {
+  document.getElementById('sentenceInput').value = btn.textContent;
+  runInference();
+}
+
+async function runInference() {
+  const sentence = document.getElementById('sentenceInput').value.trim();
+  if (!sentence) return;
+
+  // Reset all steps
+  ['step-tokenise','step-embed','step-average','step-forward','step-result'].forEach(id => {
+    document.getElementById(id).style.opacity = '.3';
+  });
+
+  const result = analyseSentence(sentence);
+
+  // Step 2: Tokenisation
+  await delay(200);
+  document.getElementById('step-tokenise').style.opacity = '1';
+  const tokenRow = document.getElementById('tokenRow');
+  tokenRow.innerHTML = '';
+  result.tokens.forEach((t, i) => {
+    const el = document.createElement('span');
+    el.className = 'token' + (result.embeddings[i].known ? '' : ' unknown');
+    el.textContent = t;
+    el.style.animationDelay = (i * 60) + 'ms';
+    tokenRow.appendChild(el);
+  });
+
+  // Step 3: Embeddings
+  await delay(400 + result.tokens.length * 60);
+  document.getElementById('step-embed').style.opacity = '1';
+  const grid = document.getElementById('embeddingGrid');
+  grid.innerHTML = '';
+  result.embeddings.forEach((e, idx) => {
+    const label = document.createElement('div');
+    label.className = 'emb-label';
+    label.textContent = e.word + (e.known ? '' : ' ⟨?⟩');
+    grid.appendChild(label);
+
+    const bars = document.createElement('div');
+    bars.className = 'emb-bars';
+    e.embedding.forEach((v, i) => {
+      const bar = document.createElement('div');
+      bar.className = 'emb-bar';
+      const h = Math.abs(v) * 24;
+      bar.style.height = '0px';
+      bar.style.background = v > 0 ? `rgba(34,197,94,${0.3 + Math.abs(v) * 0.7})` : `rgba(239,68,68,${0.3 + Math.abs(v) * 0.7})`;
+      bar.style.alignSelf = v > 0 ? 'flex-end' : 'flex-start';
+      bar.style.transitionDelay = (idx * 80 + i * 15) + 'ms';
+      bars.appendChild(bar);
+      requestAnimationFrame(() => { bar.style.height = Math.max(3, h) + 'px'; });
+    });
+    grid.appendChild(bars);
+  });
+
+  // Step 4: Average
+  await delay(600 + result.embeddings.length * 80);
+  document.getElementById('step-average').style.opacity = '1';
+  const merge = document.getElementById('vecMerge');
+  merge.innerHTML = '';
+  result.tokens.forEach((t, i) => {
+    if (i > 0) { const a = document.createElement('span'); a.className = 'vec-arrow'; a.textContent = '+'; merge.appendChild(a); }
+    const chip = document.createElement('span');
+    chip.className = 'vec-chip';
+    chip.textContent = t;
+    merge.appendChild(chip);
+  });
+  const divSign = document.createElement('span');
+  divSign.className = 'vec-arrow';
+  divSign.textContent = `÷ ${result.tokens.length} =`;
+  merge.appendChild(divSign);
+  const resChip = document.createElement('span');
+  resChip.className = 'vec-result';
+  resChip.textContent = '16D vector';
+  merge.appendChild(resChip);
+
+  const avgBars = document.getElementById('avgBars');
+  avgBars.innerHTML = '';
+  result.avg.forEach((v, i) => {
+    const bar = document.createElement('div');
+    bar.className = 'emb-bar';
+    bar.style.width = '20px';
+    const h = Math.abs(v) * 36;
+    bar.style.height = '0px';
+    bar.style.background = v > 0 ? `rgba(99,102,241,${0.3 + Math.abs(v) * 0.7})` : `rgba(239,68,68,${0.3 + Math.abs(v) * 0.7})`;
+    bar.style.alignSelf = v > 0 ? 'flex-end' : 'flex-start';
+    bar.style.transitionDelay = (i * 30) + 'ms';
+    avgBars.appendChild(bar);
+    requestAnimationFrame(() => { bar.style.height = Math.max(3, h) + 'px'; });
+  });
+
+  // Step 5: Forward pass
+  await delay(400);
+  document.getElementById('step-forward').style.opacity = '1';
+
+  // Build mini network diagram
+  const inputDiv = document.getElementById('inf-input-neurons');
+  const hiddenDiv = document.getElementById('inf-hidden-neurons');
+  const outputDiv = document.getElementById('inf-output-neurons');
+  inputDiv.innerHTML = '';
+  hiddenDiv.innerHTML = '';
+  outputDiv.innerHTML = '';
+
+  // Show subset of input neurons
+  for (let i = 0; i < 8; i++) {
+    const n = document.createElement('div');
+    n.className = 'neuron';
+    n.style.width = '28px'; n.style.height = '28px'; n.style.fontSize = '.55rem';
+    n.textContent = result.avg[i].toFixed(1);
+    const brightness = Math.abs(result.avg[i]);
+    n.style.borderColor = `rgba(99,102,241,${0.2 + brightness * 0.8})`;
+    n.style.background = `rgba(99,102,241,${brightness * 0.1})`;
+    inputDiv.appendChild(n);
+  }
+
+  // Animate hidden neurons lighting up
+  for (let j = 0; j < HIDDEN_SIZE; j++) {
+    const n = document.createElement('div');
+    n.className = 'neuron';
+    n.style.width = '28px'; n.style.height = '28px'; n.style.fontSize = '.55rem';
+    n.style.opacity = '0.3';
+    n.textContent = result.hidden[j].toFixed(1);
+    hiddenDiv.appendChild(n);
+    setTimeout(() => {
+      n.style.opacity = '1';
+      n.classList.add('active');
+      n.style.borderColor = `rgba(99,102,241,${result.hidden[j]})`;
+      n.style.background = `rgba(99,102,241,${result.hidden[j] * 0.15})`;
+    }, j * 50);
+  }
+
+  document.getElementById('fa1').style.opacity = '1';
+
+  await delay(HIDDEN_SIZE * 50 + 200);
+  document.getElementById('fa2').style.opacity = '1';
+
+  // Output neurons
+  const outColors = [
+    { c: 'var(--positive)', bg: 'var(--positive-bg)' },
+    { c: 'var(--negative)', bg: 'var(--negative-bg)' },
+    { c: 'var(--neutral)', bg: 'var(--neutral-bg)' },
+  ];
+  const outLabels = ['+', '−', '~'];
+  for (let k = 0; k < OUTPUT_SIZE; k++) {
+    const n = document.createElement('div');
+    n.className = 'neuron';
+    n.style.width = '36px'; n.style.height = '36px'; n.style.fontSize = '.65rem';
+    n.textContent = outLabels[k];
+    n.style.opacity = '0.3';
+    outputDiv.appendChild(n);
+    setTimeout(() => {
+      n.style.opacity = '1';
+      const brightness = result.output[k];
+      n.style.borderColor = outColors[k].c;
+      n.style.background = outColors[k].bg;
+      n.style.boxShadow = `0 0 ${brightness * 20}px ${outColors[k].c.replace('var(--', 'rgba(').replace(')', ',0.3)')}`;
+      n.textContent = (result.output[k] * 100).toFixed(0) + '%';
+    }, k * 120 + 100);
+  }
+
+  // Step 6: Result
+  await delay(600);
+  document.getElementById('step-result').style.opacity = '1';
+
+  const cards = document.querySelectorAll('.score-card');
+  cards.forEach(c => c.classList.remove('winner'));
+
+  document.getElementById('posScore').textContent = result.output[0].toFixed(3);
+  document.getElementById('negScore').textContent = result.output[1].toFixed(3);
+  document.getElementById('neuScore').textContent = result.output[2].toFixed(3);
+  document.getElementById('posPct').textContent = (result.output[0] * 100).toFixed(1) + '%';
+  document.getElementById('negPct').textContent = (result.output[1] * 100).toFixed(1) + '%';
+  document.getElementById('neuPct').textContent = (result.output[2] * 100).toFixed(1) + '%';
+
+  const maxIdx = result.output.indexOf(Math.max(...result.output));
+  cards[maxIdx].classList.add('winner');
+
+  const banner = document.getElementById('resultBanner');
+  banner.className = 'result-banner show ' + ['pos-result','neg-result','neu-result'][maxIdx];
+  document.getElementById('resultEmoji').textContent = ['😊','😞','😐'][maxIdx];
+  document.getElementById('resultLabel').textContent = result.label;
+  document.getElementById('resultConf').textContent = (result.confidence * 100).toFixed(1) + '% confidence';
+}
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+
+// ============================================================
+// EMBEDDINGS TAB
+// ============================================================
+function initEmbeddingsTab() {
+  const posWords = ['love','amazing','brilliant','excellent','fantastic','wonderful','superb','outstanding','perfect','incredible'];
+  const negWords = ['hate','terrible','awful','horrible','worst','disappointing','dreadful','frustrating','useless','poor'];
+  const neuWords = ['okay','average','fine','decent','acceptable','adequate','mediocre','standard','ordinary','reasonable'];
+  const comWords = ['the','is','it','a','and','this','i','my','was','with'];
+
+  function fill(containerId, words, cat) {
+    const el = document.getElementById(containerId);
+    if (el.children.length > 0) return; // already filled
+    words.forEach(w => {
+      const btn = document.createElement('button');
+      btn.className = 'example-btn';
+      btn.textContent = w;
+      btn.onclick = () => showWordEmbedding(w, cat);
+      el.appendChild(btn);
+    });
+  }
+
+  fill('posWords', posWords, 'positive');
+  fill('negWords', negWords, 'negative');
+  fill('neuWords', neuWords, 'neutral');
+  fill('comWords', comWords, 'common');
+
+  drawSimilarityMap();
+}
+
+function showWordEmbedding(word, cat) {
+  const card = document.getElementById('embDetailCard');
+  card.style.display = 'block';
+  document.getElementById('embWordTitle').textContent = word;
+
+  const emb = generateEmbedding(word);
+  const bars = document.getElementById('embDetailBars');
+  bars.innerHTML = '';
+
+  emb.forEach((v, i) => {
+    const bar = document.createElement('div');
+    bar.className = 'emb-bar';
+    bar.style.width = '28px';
+    const h = Math.abs(v) * 100;
+    bar.style.height = '0px';
+    const colors = {
+      positive: v > 0 ? `rgba(34,197,94,${0.4 + Math.abs(v) * 0.6})` : `rgba(239,68,68,${0.3 + Math.abs(v) * 0.5})`,
+      negative: v > 0 ? `rgba(34,197,94,${0.3 + Math.abs(v) * 0.5})` : `rgba(239,68,68,${0.4 + Math.abs(v) * 0.6})`,
+      neutral: `rgba(245,158,11,${0.3 + Math.abs(v) * 0.6})`,
+      common: `rgba(140,140,160,${0.3 + Math.abs(v) * 0.5})`,
+    };
+    bar.style.background = colors[cat] || colors.common;
+    bar.style.alignSelf = v > 0 ? 'flex-end' : 'flex-start';
+    bar.style.transitionDelay = (i * 25) + 'ms';
+    bars.appendChild(bar);
+    requestAnimationFrame(() => { bar.style.height = Math.max(4, h) + 'px'; });
+  });
+
+  document.getElementById('embDetailNums').textContent = '[' + emb.map(v => v.toFixed(3)).join(', ') + ']';
+}
+
+function drawSimilarityMap() {
+  const canvas = document.getElementById('similarityCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const dpr = window.devicePixelRatio || 1;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#1a1c26';
+  ctx.beginPath(); ctx.roundRect(0, 0, W, H, 8); ctx.fill();
+
+  // Words to plot
+  const words = [
+    { w: 'love', cat: 'pos' }, { w: 'amazing', cat: 'pos' }, { w: 'brilliant', cat: 'pos' },
+    { w: 'excellent', cat: 'pos' }, { w: 'fantastic', cat: 'pos' }, { w: 'wonderful', cat: 'pos' },
+    { w: 'superb', cat: 'pos' }, { w: 'perfect', cat: 'pos' },
+    { w: 'hate', cat: 'neg' }, { w: 'terrible', cat: 'neg' }, { w: 'awful', cat: 'neg' },
+    { w: 'horrible', cat: 'neg' }, { w: 'worst', cat: 'neg' }, { w: 'disappointing', cat: 'neg' },
+    { w: 'dreadful', cat: 'neg' }, { w: 'useless', cat: 'neg' },
+    { w: 'okay', cat: 'neu' }, { w: 'average', cat: 'neu' }, { w: 'fine', cat: 'neu' },
+    { w: 'decent', cat: 'neu' }, { w: 'acceptable', cat: 'neu' }, { w: 'mediocre', cat: 'neu' },
+    { w: 'the', cat: 'com' }, { w: 'is', cat: 'com' }, { w: 'and', cat: 'com' }, { w: 'this', cat: 'com' },
+  ];
+
+  // Simple 2D projection using first 2 principal components (simulated)
+  const embeddings = words.map(w => ({ ...w, emb: generateEmbedding(w.w) }));
+
+  // Use dim 0 and dim 1 as x/y (good enough for viz)
+  const xVals = embeddings.map(e => e.emb[0] + e.emb[2] * 0.5);
+  const yVals = embeddings.map(e => e.emb[1] + e.emb[3] * 0.5);
+  const xMin = Math.min(...xVals) - 0.3, xMax = Math.max(...xVals) + 0.3;
+  const yMin = Math.min(...yVals) - 0.3, yMax = Math.max(...yVals) + 0.3;
+
+  const pad = 60;
+
+  function toX(v) { return pad + ((v - xMin) / (xMax - xMin)) * (W - pad * 2); }
+  function toY(v) { return pad + ((v - yMin) / (yMax - yMin)) * (H - pad * 2); }
+
+  // Axes
+  ctx.strokeStyle = 'rgba(42,45,58,.8)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(pad, H / 2); ctx.lineTo(W - pad, H / 2);
+  ctx.moveTo(W / 2, pad); ctx.lineTo(W / 2, H - pad);
+  ctx.stroke();
+
+  // Region labels
+  ctx.font = '12px "DM Mono", monospace';
+  ctx.fillStyle = 'rgba(34,197,94,.3)';
+  ctx.fillText('Positive Region', W - pad - 110, pad + 16);
+  ctx.fillStyle = 'rgba(239,68,68,.3)';
+  ctx.fillText('Negative Region', pad + 4, H - pad - 8);
+  ctx.fillStyle = 'rgba(245,158,11,.3)';
+  ctx.fillText('Neutral', W / 2 - 20, H / 2 - 8);
+
+  const catColors = { pos: '#22c55e', neg: '#ef4444', neu: '#f59e0b', com: '#6b7280' };
+  const catBg = { pos: 'rgba(34,197,94,.15)', neg: 'rgba(239,68,68,.15)', neu: 'rgba(245,158,11,.15)', com: 'rgba(107,114,128,.1)' };
+
+  embeddings.forEach((e, i) => {
+    const x = toX(xVals[i]);
+    const y = toY(yVals[i]);
+
+    // Glow
+    ctx.beginPath();
+    ctx.arc(x, y, 14, 0, Math.PI * 2);
+    ctx.fillStyle = catBg[e.cat];
+    ctx.fill();
+
+    // Dot
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
+    ctx.fillStyle = catColors[e.cat];
+    ctx.fill();
+
+    // Label
+    ctx.font = '11px "DM Mono", monospace';
+    ctx.fillStyle = catColors[e.cat];
+    ctx.textAlign = 'center';
+    ctx.fillText(e.w, x, y - 10);
+  });
+}
+
+// ============================================================
+// ENTER KEY support
+// ============================================================
+document.getElementById('sentenceInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') runInference();
+});
+
+// Run initial inference
+setTimeout(runInference, 500);
+</script>
+
+</body>
+</html>
